@@ -24,7 +24,7 @@ set COMPOSE_CONVERT_WINDOWS_PATHS=1
 docker-compose up -d
 ```
 
-You can check whether the environment is running correctly by visiting Flink Web UI [http: // localhost: 8081] (http: // localhost: 8081).
+You can check whether the environment is running correctly by visiting Flink Web UI [http://localhost:8081](http://localhost:8081).
 
 # Examples
 1. WordCount
@@ -71,9 +71,9 @@ The results look like：
 {"rideId":3322,"taxiId":2013003190,"isStart":true,"lon":-73.98382,"lat":40.74381,"psgCnt":1,"rideTime":"2013-01-01T00:11:48Z"}
 {"rideId":3323,"taxiId":2013003191,"isStart":true,"lon":-74.00485,"lat":40.72102,"psgCnt":4,"rideTime":"2013-01-01T00:11:48Z"}
 ```
-停止job
+Stop job:
 
-请访问http://localhost:8081/#/overview ，并选择运行的job，然后点Cancle.
+Visit http://localhost:8081/#/overview , select the running job and click the `Cancle` button.
 
 ## 3-Python UDF
 
@@ -108,4 +108,3 @@ A result file `udf_add_output` will be added in the path `playgrounds/examples/d
 ```
 3
 ```
-
