@@ -1,5 +1,5 @@
 # Playgrounds
-Playgrounds 旨在提供快速上手的环境及例子，方便用户快速了解PyFlink的功能。Playgrounds采用docker-compose环境，集成了PyFlink、Kafka、Python。目前Playgrounds的例子基于最新的PyFlink 1.10.0。
+Playgrounds 旨在提供快速上手的环境及例子，方便用户快速了解PyFlink的功能。Playgrounds采用docker-compose环境，集成了PyFlink、Kafka、Python。目前Playgrounds的例子基于最新的PyFlink（1.10.0）。
 
 # 环境配置
 
@@ -54,6 +54,8 @@ docker-compose up -d
 
 ## 1-WordCount
 
+代码：[1-word_count.py](https://github.com/pyflink/playgrounds/blob/master/examples/1-word_count.py)
+
 启动程序
 ```
 cd playgrounds
@@ -68,6 +70,8 @@ pyflink	1
 ```
 
 ## 2-Read and write with Kafka
+
+代码：[2-from_kafka_to_kafka.py](https://github.com/pyflink/playgrounds/blob/master/examples/2-from_kafka_to_kafka.py)
 
 Kafka是一个常用的connector，本例子展示了如何读写Kafka。
 
@@ -94,6 +98,8 @@ docker-compose exec kafka kafka-console-consumer.sh --bootstrap-server kafka:909
 
 ## 3-Python UDF
 
+代码：[3-udf_add.py](https://github.com/pyflink/playgrounds/blob/master/examples/3-udf_add.py)
+
 启动命令
 ```
 cd playgrounds
@@ -107,6 +113,8 @@ playgrounds/examples/data目录下会生成一个udf_add_output结果文件，�
 ```
 
 ## 4-Python UDF with dependenciy
+
+代码：[4-udf_add_with_dependency.py](https://github.com/pyflink/playgrounds/blob/master/examples/4-udf_add_with_dependency.py)
 
 假设我们对上面的例子进行修改，引入了外部依赖`mpmath`，此时，需要使用`set_python_requirements`来指定需要的依赖。Python UDF的依赖管理详见 [Python 依赖管理文档](https://ci.apache.org/projects/flink/flink-docs-master/dev/table/python/dependency_management.html)。
 
