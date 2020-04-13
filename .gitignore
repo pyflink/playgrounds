@@ -1,0 +1,6 @@
+**/target
+**/dependency-reduced-pom.xml
+**/.idea
+**/.DS_Store
+**/flink-*-SNAPSHOT
+**/sql-training-data-producer.iml
