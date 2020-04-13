@@ -1,51 +1,32 @@
 # Playgrounds
-Playgrounds 旨在提供快速上手的环境及例子，方便用户快速了解PyFlink的功能。Playgrounds采用docker-compose环境，集成了PyFlink、Kafka、Python。目前Playgrounds的例子基于最新的PyFlink（1.10.0）。
+Playgrounds aims to provide a quick-start environment and examples for users to quickly understand the features of PyFlink. Playgrounds setup environment with docker-compose and integrates PyFlink, Kafka, Python to make it easy for experience. The current Playgrounds examples are based on the latest PyFlink (1.10.0).
 
-# 环境配置
+# Environment Setup
 
-## 环境依赖
-* **你只需要在你的电脑上安装[Docker](https://www.docker.com)。**
-
-Docker 适用于 Linux, MacOS, 和 Windows。
-
-**注意**：你需要为配置 Docker 配置足够的资源，以避免培训环境卡死无响应。
-我们在以 3-4 GB 内存和 3-4 CPU 核运行的 Docker 上拥有良好的体验。
-
-## 获取 Docker Compose 配置
-
-Docker Compose 环境通过一个 YAML 文件来配置。默认的文件路径是 `docker-compose.yml`。
-
-通过 clone 我们的 Git 仓库可以获取该环境的配置文件。
-
+1. Install [Docker](https://www.docker.com). 
+2. Get Docker Compose configuration
 ```
 git clone https://github.com/pyflink/playgrounds.git
 ```
-## 启动Playgrounds环境
-
-为了运行Playgrounds环境，Docker 引擎需要先运行在你的电脑上。
-
-另外，所有必需的 Docker 镜像都必须存在于本地映像存储中。Docker 会自动检查缺少的镜像并从 [Docker Hub](http://hub.docker.com) 下载。当第一次运行这个命令的时候，大概会花费几分钟去下载所有依赖的镜像（大约 2.3GB）。一旦镜像可用了，环境一般能在几秒钟内启动。
-
-为了启动环境，需要打开命令行（Windows 用户可以使用 `cmd`），进入包含`docker-compose.yml`文件的目录，然后运行如下命令。 
-
+3. Setup environment
 * **Linux & MacOS**
 
 ```bash
+cd playgrounds
 docker-compose up -d
 ```
 
 * **Windows**
 
 ```
+cd playgrounds
 set COMPOSE_CONVERT_WINDOWS_PATHS=1
 docker-compose up -d
 ```
 
-----
+You can check whether the environment is running correctly by visiting Flink Web UI [http: // localhost: 8081] (http: // localhost: 8081).
 
-这个 `docker-compose` 会以 detached 模式启动所有 Docker Compose 配置中定义的容器。你可以通过访问 Flink Web UI [http://localhost:8081](http://localhost:8081) 来检查环境是否正确运行了。
-
-# 例子
+# Examples
 1. WordCount
 2. Read and write with Kafka
 3. Python UDF
@@ -53,16 +34,16 @@ docker-compose up -d
 
 ## 1-WordCount
 
-代码：[1-word_count.py](https://github.com/pyflink/playgrounds/blob/master/examples/1-word_count.py)
+Code：[1-word_count.py](https://github.com/pyflink/playgrounds/blob/master/examples/1-word_count.py)
 
-启动程序
+Run:
 ```
 cd playgrounds
 docker-compose exec jobmanager ./bin/flink run -py /opt/examples/wordcount.py
 ```
-查看结果
+Check Results:
 
-playgrounds/examples/data目录下会生成一个word_count_output结果文件，内容如下：
+A result file `word_count_output` will be added in the path `playgrounds/examples/data`, with the following content：
 ```
 flink	2
 pyflink	1
@@ -70,20 +51,19 @@ pyflink	1
 
 ## 2-Read and write with Kafka
 
-代码：[2-from_kafka_to_kafka.py](https://github.com/pyflink/playgrounds/blob/master/examples/2-from_kafka_to_kafka.py)
+Code：[2-from_kafka_to_kafka.py](https://github.com/pyflink/playgrounds/blob/master/examples/2-from_kafka_to_kafka.py)
 
-Kafka是一个常用的connector，本例子展示了如何读写Kafka。
-
-启动命令
+Run:
 ```
 cd playgrounds
 docker-compose exec jobmanager ./bin/flink run -py /opt/examples/2-from_kafka_to_kafka.py
 ```
-查看输出
+
+Check Results:
 ```
 docker-compose exec kafka kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic TempResults
 ```
-输出的内容大致如下：
+The results look like：
 
 ```
 {"rideId":3321,"taxiId":2013003189,"isStart":true,"lon":-73.99606,"lat":40.725132,"psgCnt":2,"rideTime":"2013-01-01T00:11:47Z"}
@@ -97,34 +77,34 @@ docker-compose exec kafka kafka-console-consumer.sh --bootstrap-server kafka:909
 
 ## 3-Python UDF
 
-代码：[3-udf_add.py](https://github.com/pyflink/playgrounds/blob/master/examples/3-udf_add.py)
+Code：[3-udf_add.py](https://github.com/pyflink/playgrounds/blob/master/examples/3-udf_add.py)
 
-启动命令
+Run:
 ```
 cd playgrounds
 docker-compose exec jobmanager ./bin/flink run -py /opt/examples/3-udf_add.py
 ```
-查看输出
+Check Results:
 
-playgrounds/examples/data目录下会生成一个udf_add_output结果文件，内容如下：
+A result file `udf_add_output` will be added in the path `playgrounds/examples/data`, with the following content：
 ```
 3
 ```
 
 ## 4-Python UDF with dependenciy
 
-代码：[4-udf_add_with_dependency.py](https://github.com/pyflink/playgrounds/blob/master/examples/4-udf_add_with_dependency.py)
+Code：[4-udf_add_with_dependency.py](https://github.com/pyflink/playgrounds/blob/master/examples/4-udf_add_with_dependency.py)
 
-假设我们对上面的例子进行修改，引入了外部依赖`mpmath`，此时，需要使用`set_python_requirements`来指定需要的依赖。Python UDF的依赖管理详见 [Python 依赖管理文档](https://ci.apache.org/projects/flink/flink-docs-master/dev/table/python/dependency_management.html)。
+Check the [Python Dependency management](https://ci.apache.org/projects/flink/flink-docs-master/dev/table/python/dependency_management.html) for more details about how to handle Python UDF dependencies。
 
-启动命令
+Run:
 ```
 cd playgrounds
 docker-compose exec jobmanager ./bin/flink run -py /opt/examples/4-udf_add_with_dependency.py
 ```
-查看输出
+Check Results:
 
-playgrounds/examples/data目录下会生成一个udf_add_output结果文件，内容如下：
+A result file `udf_add_output` will be added in the path `playgrounds/examples/data`, with the following content：
 ```
 3
 ```
