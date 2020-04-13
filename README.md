@@ -20,13 +20,13 @@ Docker Compose 环境通过一个 YAML 文件来配置。默认的文件路径�
 ```
 git clone https://github.com/pyflink/playgrounds.git
 ```
-## 启动培训环境
+## 启动Playgrounds环境
 
-为了运行培训环境，Docker 引擎需要先运行在你的电脑上。
+为了运行Playgrounds环境，Docker 引擎需要先运行在你的电脑上。
 
-另外，所有必需的 Docker 镜像都必须存在于本地映像存储中。Docker 会自动检查缺少的镜像并从 [Docker Hub](http://hub.docker.com) 下载。当第一次运行这个命令的时候，大概会花费几分钟去下载所有依赖的镜像（大约 2.3GB）。一旦镜像可用了，培训环境一般能在几秒钟内启动。
+另外，所有必需的 Docker 镜像都必须存在于本地映像存储中。Docker 会自动检查缺少的镜像并从 [Docker Hub](http://hub.docker.com) 下载。当第一次运行这个命令的时候，大概会花费几分钟去下载所有依赖的镜像（大约 2.3GB）。一旦镜像可用了，环境一般能在几秒钟内启动。
 
-为了启动培训环境，需要打开命令行（Windows 用户可以使用 `cmd`），进入包含`docker-compose.yml`文件的目录，然后运行如下命令。 
+为了启动环境，需要打开命令行（Windows 用户可以使用 `cmd`），进入包含`docker-compose.yml`文件的目录，然后运行如下命令。 
 
 * **Linux & MacOS**
 
@@ -46,11 +46,10 @@ docker-compose up -d
 这个 `docker-compose` 会以 detached 模式启动所有 Docker Compose 配置中定义的容器。你可以通过访问 Flink Web UI [http://localhost:8081](http://localhost:8081) 来检查环境是否正确运行了。
 
 # 例子
-1. wordcount
-2. read and write with kafka
-3. python udf
-4. python pandas udf
-5. udf with metric
+1. WordCount
+2. Read and write with Kafka
+3. Python UDF
+4. Python UDF with dependencies
 
 ## 1-WordCount
 
