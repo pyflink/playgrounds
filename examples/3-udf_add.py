@@ -30,4 +30,4 @@ t_env.from_path('mySource')\
     .select("add(a, b)") \
     .insert_into('mySink')
 
-t_env.execute("udf_add")
+t_env.execute("3-udf_add")

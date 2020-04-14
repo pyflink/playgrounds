@@ -1,7 +1,19 @@
 
 from pyflink.datastream import StreamExecutionEnvironment, TimeCharacteristic
 from pyflink.table import StreamTableEnvironment, DataTypes, EnvironmentSettings
-from pyflink.table.descriptors import Schema, Kafka, Json, Rowtime
+from pyflink.table.descriptors import Schema, Kafka, Json
+from pyflink.table.udf import ScalarFunction, udf
+
+
+class MyAdd(ScalarFunction):
+
+    def open(self, function_context):
+        mg = function_context.get_metric_group()
+        self.counter = mg.add_group("aaa", "bbb").counter("my_counter")
+
+    def eval(self, a, b):
+        self.counter.inc()
+        return a + b
 
 
 def from_kafka_to_kafka_demo():
@@ -20,11 +32,14 @@ def from_kafka_to_kafka_demo():
     register_rides_source(st_env)
     register_rides_sink(st_env)
 
+    add = udf(MyAdd(), [DataTypes.BIGINT(), DataTypes.BIGINT()], DataTypes.BIGINT())
+    st_env.register_function("add", add)
+
     # query
-    st_env.from_path("source").insert_into("sink")
+    st_env.from_path("source").select("add(rideId, taxiId)").insert_into("sink")
 
     # execute
-    st_env.execute("2-from_kafka_to_kafka")
+    st_env.execute("6-udf_metrics.py")
 
 
 def register_rides_source(st_env):
@@ -71,24 +86,9 @@ def register_rides_sink(st_env):
         .with_format(  # declare a format for this system
         Json()
             .fail_on_missing_field(True)
-            .schema(DataTypes.ROW([
-            DataTypes.FIELD("rideId", DataTypes.BIGINT()),
-            DataTypes.FIELD("taxiId", DataTypes.BIGINT()),
-            DataTypes.FIELD("isStart", DataTypes.BOOLEAN()),
-            DataTypes.FIELD("lon", DataTypes.FLOAT()),
-            DataTypes.FIELD("lat", DataTypes.FLOAT()),
-            DataTypes.FIELD("psgCnt", DataTypes.INT()),
-            DataTypes.FIELD("rideTime", DataTypes.STRING())
-        ]))) \
+            .schema(DataTypes.ROW([DataTypes.FIELD("sum_value", DataTypes.BIGINT())]))) \
         .with_schema(  # declare the schema of the table
-        Schema()
-            .field("rideId", DataTypes.BIGINT())
-            .field("taxiId", DataTypes.BIGINT())
-            .field("isStart", DataTypes.BOOLEAN())
-            .field("lon", DataTypes.FLOAT())
-            .field("lat", DataTypes.FLOAT())
-            .field("psgCnt", DataTypes.INT())
-            .field("rideTime", DataTypes.STRING())) \
+        Schema().field("sum_value", DataTypes.BIGINT())) \
         .in_append_mode() \
         .create_temporary_table("sink")
 
