@@ -6,7 +6,7 @@ Playgrounds aims to provide a quick-start environment and examples for users to 
 1. Install [Docker](https://www.docker.com). 
 2. Get Docker Compose configuration
 ```
-git clone -b 1.11-snapshot https://github.com/pyflink/playgrounds.git
+git clone https://github.com/pyflink/playgrounds.git
 ```
 3. Setup environment
 * **Linux & MacOS**
