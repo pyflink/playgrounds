@@ -39,7 +39,7 @@ Code：[1-word_count.py](https://github.com/pyflink/playgrounds/blob/master/exam
 Run:
 ```
 cd playgrounds
-docker-compose exec jobmanager ./bin/flink run -py /opt/examples/wordcount.py
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/1-word_count.py
 ```
 Check Results:
 
