@@ -6,7 +6,7 @@ Playgrounds aims to provide a quick-start environment and examples for users to 
 1. Install [Docker](https://www.docker.com). 
 2. Get Docker Compose configuration
 ```
-git clone https://github.com/pyflink/playgrounds.git
+git clone -b 1.11-snapshot https://github.com/pyflink/playgrounds.git
 ```
 3. Setup environment
 * **Linux & MacOS**
@@ -31,6 +31,8 @@ You can check whether the environment is running correctly by visiting Flink Web
 2. Read and write with Kafka
 3. Python UDF
 4. Python UDF with dependencies
+5. Python Pandas UDF
+6. Python UDF with Metrics
 
 ## 1-WordCount
 
@@ -101,6 +103,38 @@ Run:
 ```
 cd playgrounds
 docker-compose exec jobmanager ./bin/flink run -py /opt/examples/4-udf_add_with_dependency.py
+```
+Check Results:
+
+A result file `udf_add_output` will be added in the path `playgrounds/examples/data`, with the following content：
+```
+3
+```
+
+## 5-Python Pandas UDF
+
+Code：[5-pandas_udf_add.py](https://github.com/pyflink/playgrounds/blob/master/examples/5-pandas_udf_add.py)
+
+Run:
+```
+cd playgrounds
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/5-pandas_udf_add.py
+```
+Check Results:
+
+A result file `udf_add_output` will be added in the path `playgrounds/examples/data`, with the following content：
+```
+3
+```
+
+## 6-Python UDF with Metrics
+
+Code：[6-udf_metrics.py](https://github.com/pyflink/playgrounds/blob/master/examples/6-udf_metrics.py)
+
+Run:
+```
+cd playgrounds
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/6-udf_metrics.py
 ```
 Check Results:
 
