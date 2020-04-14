@@ -1,7 +1,7 @@
 version: '2.1'
 services:
   jobmanager:
-    image: pyflink/pyflink:1.10.0
+    image: pyflink/playgrounds:1.10.0
     volumes:
       - ./examples:/opt/examples
     hostname: "jobmanager"
@@ -13,7 +13,7 @@ services:
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
   taskmanager:
-    image: pyflink/pyflink:1.10.0
+    image: pyflink/playgrounds:1.10.0
     volumes:
       - ./examples:/opt/examples
     expose:
@@ -71,3 +71,26 @@ services:
       ZOOKEEPER_CONNECT: zookeeper
       KAFKA_BOOTSTRAP: kafka
       ES_HOST: elasticsearch
+#  db:
+#    image: mysql
+#    command: --default-authentication-plugin=mysql_native_password
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: example
+#  adminer:
+#    image: adminer
+#    restart: always
+#    ports:
+#      - 8080:8080
+#  hive:
+#    image: bde2020/hive:latest
+#    depends_on:
+#      - jobmanager
+#    environment:
+#      FLINK_JOBMANAGER_HOST: jobmanager
+#  hbase:
+#    image: aaionap/hbase:latest
+#    depends_on:
+#      - jobmanager
+#    environment:
+#      FLINK_JOBMANAGER_HOST: jobmanager
