@@ -1,7 +1,7 @@
 version: '2.1'
 services:
   jobmanager:
-    image: pyflink/pyflink:1.11-snapshot
+    image: pyflink/playgrounds:1.11-snapshot
     volumes:
       - ./examples:/opt/examples
     hostname: "jobmanager"
@@ -13,7 +13,7 @@ services:
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
   taskmanager:
-    image: pyflink/pyflink:1.11-snapshot
+    image: pyflink/playgrounds:1.11-snapshot
     volumes:
       - ./examples:/opt/examples
     expose:
