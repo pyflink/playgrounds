@@ -110,35 +110,3 @@ A result file `udf_add_output` will be added in the path `playgrounds/examples/d
 ```
 3
 ```
-
-## 5-Python Pandas UDF
-
-Code：[5-pandas_udf_add.py](https://github.com/pyflink/playgrounds/blob/master/examples/5-pandas_udf_add.py)
-
-Run:
-```
-cd playgrounds
-docker-compose exec jobmanager ./bin/flink run -py /opt/examples/5-pandas_udf_add.py
-```
-Check Results:
-
-A result file `udf_add_output` will be added in the path `playgrounds/examples/data`, with the following content：
-```
-3
-```
-
-## 6-Python UDF with Metrics
-
-Code：[6-udf_metrics.py](https://github.com/pyflink/playgrounds/blob/master/examples/6-udf_metrics.py)
-
-Run:
-```
-cd playgrounds
-docker-compose exec jobmanager ./bin/flink run -py /opt/examples/6-udf_metrics.py
-```
-Check Results:
-
-A result file `udf_add_output` will be added in the path `playgrounds/examples/data`, with the following content：
-```
-3
-```
