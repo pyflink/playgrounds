@@ -31,6 +31,8 @@ You can check whether the environment is running correctly by visiting Flink Web
 2. Read and write with Kafka
 3. Python UDF
 4. Python UDF with dependencies
+5. Python Pandas UDF
+6. Python UDF with User-defined metrics
 
 ## 1-WordCount
 
