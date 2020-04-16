@@ -18,7 +18,7 @@ class MyAdd(ScalarFunction):
         return a + b
 
 
-def from_kafka_to_kafka_demo():
+def python_udf_metric_demo():
     s_env = StreamExecutionEnvironment.get_execution_environment()
     s_env.set_stream_time_characteristic(TimeCharacteristic.EventTime)
     s_env.set_parallelism(1)
@@ -96,4 +96,4 @@ def register_rides_sink(st_env):
 
 
 if __name__ == '__main__':
-    from_kafka_to_kafka_demo()
+    python_udf_metric_demo()
