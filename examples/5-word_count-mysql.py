@@ -17,7 +17,9 @@ source_ddl = """CREATE TABLE MySourceTable (word varchar) WITH (
         'connector.type' = 'jdbc',
         'connector.url' = 'jdbc:mysql://localhost:3306/flink-test',
         'connector.table' = 'word',
-        'connector.driver' = 'com.mysql.jdbc.Driver')
+        'connector.driver' = 'com.mysql.jdbc.Driver',
+        'connector.username' = 'root',
+        'connector.password' = 'example')
 """
 
 sink_ddl = """CREATE TABLE MySinkTable (
@@ -26,7 +28,9 @@ sink_ddl = """CREATE TABLE MySinkTable (
         'connector.type' = 'jdbc',
         'connector.url' = 'jdbc:mysql://localhost:3306/flink-test',
         'connector.table' = 'result',
-        'connector.driver' = 'com.mysql.jdbc.Driver')
+        'connector.driver' = 'com.mysql.jdbc.Driver',
+        'connector.username' = 'root',
+        'connector.password' = 'example')
 """
 
 st_env.sql_update(source_ddl)
