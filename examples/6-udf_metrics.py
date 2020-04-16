@@ -9,9 +9,11 @@ class MyAdd(ScalarFunction):
 
     def open(self, function_context):
         mg = function_context.get_metric_group()
+        # register metrics
         self.counter = mg.add_group("aaa", "bbb").counter("my_counter")
 
     def eval(self, a, b):
+        # invoke increase() for the counter
         self.counter.inc()
         return a + b
 

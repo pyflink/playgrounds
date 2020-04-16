@@ -5,6 +5,7 @@ from pyflink.table.descriptors import Schema, Kafka, Json, Rowtime
 
 
 def from_kafka_to_kafka_demo():
+    # init environment
     s_env = StreamExecutionEnvironment.get_execution_environment()
     s_env.set_stream_time_characteristic(TimeCharacteristic.EventTime)
     s_env.set_parallelism(1)
