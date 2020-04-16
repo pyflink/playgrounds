@@ -1,34 +1,40 @@
-from pyflink.dataset import ExecutionEnvironment
-from pyflink.table import TableConfig, DataTypes, BatchTableEnvironment
-from pyflink.table.descriptors import Schema, OldCsv, FileSystem
+from pyflink.datastream import StreamExecutionEnvironment, TimeCharacteristic
+from pyflink.table import StreamTableEnvironment, EnvironmentSettings
 
-exec_env = ExecutionEnvironment.get_execution_environment()
-exec_env.set_parallelism(1)
-t_config = TableConfig()
-t_env = BatchTableEnvironment.create(exec_env, t_config)
+s_env = StreamExecutionEnvironment.get_execution_environment()
+s_env.set_stream_time_characteristic(TimeCharacteristic.EventTime)
+s_env.set_parallelism(1)
 
-t_env.connect(FileSystem().path('/opt/examples/data/word_count_input')) \
-    .with_format(OldCsv()
-                 .field('word', DataTypes.STRING())) \
-    .with_schema(Schema()
-                 .field('word', DataTypes.STRING())) \
-    .create_temporary_table('mySource')
+# use blink table planner
+st_env = StreamTableEnvironment \
+    .create(s_env, environment_settings=EnvironmentSettings
+            .new_instance()
+            .in_streaming_mode()
+            .use_blink_planner().build())
 
+
+source_ddl = """CREATE TABLE MySourceTable (word varchar) WITH (
+        'connector.type' = 'jdbc',
+        'connector.url' = 'jdbc:mysql://localhost:3306/flink-test',
+        'connector.table' = 'word',
+        'connector.driver' = 'com.mysql.jdbc.Driver')
+"""
 
 sink_ddl = """CREATE TABLE MySinkTable (
     word varchar,
-    count bigint) WITH (
+    cnt bigint) WITH (
         'connector.type' = 'jdbc',
         'connector.url' = 'jdbc:mysql://localhost:3306/flink-test',
-        'connector.table' = 'jdbc_table_name',
-        'connector.driver' = 'com.mysql.jdbc.Driver',
-    )
+        'connector.table' = 'result',
+        'connector.driver' = 'com.mysql.jdbc.Driver')
 """
-t_env.sql_update(sink_ddl)
 
-t_env.from_path('mySource') \
+st_env.sql_update(source_ddl)
+st_env.sql_update(sink_ddl)
+
+st_env.from_path('MySourceTable') \
     .group_by('word') \
     .select('word, count(1)') \
-    .insert_into('mySink')
+    .insert_into('MySinkTable')
 
-t_env.execute("tutorial_job")
+st_env.execute("tutorial_job")
