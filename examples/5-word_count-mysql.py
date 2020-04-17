@@ -15,7 +15,7 @@ st_env = StreamTableEnvironment \
 
 source_ddl = """CREATE TABLE MySourceTable (word varchar) WITH (
         'connector.type' = 'jdbc',
-        'connector.url' = 'jdbc:mysql://localhost:3306/flink-test',
+        'connector.url' = 'jdbc:mysql://192.168.176.2:3306/flink-test',
         'connector.table' = 'word',
         'connector.driver' = 'com.mysql.jdbc.Driver',
         'connector.username' = 'root',
@@ -26,7 +26,7 @@ sink_ddl = """CREATE TABLE MySinkTable (
     word varchar,
     cnt bigint) WITH (
         'connector.type' = 'jdbc',
-        'connector.url' = 'jdbc:mysql://localhost:3306/flink-test',
+        'connector.url' = 'jdbc:mysql://192.168.176.2:3306/flink-test',
         'connector.table' = 'result',
         'connector.driver' = 'com.mysql.jdbc.Driver',
         'connector.username' = 'root',
@@ -41,4 +41,4 @@ st_env.from_path('MySourceTable') \
     .select('word, count(1)') \
     .insert_into('MySinkTable')
 
-st_env.execute("tutorial_job")
+st_env.execute("5-word_count-mysql")

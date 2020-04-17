@@ -110,3 +110,27 @@ A result file `udf_add_output` will be added in the path `playgrounds/examples/d
 ```
 3
 ```
+
+## 5-Read and write with mysql
+
+Code：[5-word_count-mysql.py](https://github.com/pyflink/playgrounds/blob/master/examples/5-word_count-mysql.py)
+
+Init:
+```bash
+➜  playgrounds git:(jdbc) ✗ docker ps -a | grep mysql | awk -F ' ' '{print $1}'
+8073c207ceeb
+➜  playgrounds git:(jdbc) ✗ docker inspect 8073c207ceeb | grep "\"IPAddress\": \"192"
+                    "IPAddress": "192.168.176.2",
+```
+
+Change the ip in [5-word_count-mysql.py](https://github.com/pyflink/playgrounds/blob/master/examples/5-word_count-mysql.py) to the ip above, i.e., `192.168.176.2`
+
+
+Run:
+```
+cd playgrounds
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/5-word_count-mysql.py
+```
+Check Results:
+
+Visit http://localhost:8080 with username:root, password:example, database:flink-test. Then you can query the `result` table with query: `select * from result`
