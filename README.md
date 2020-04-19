@@ -110,3 +110,19 @@ A result file `udf_add_output` will be added in the path `playgrounds/examples/d
 ```
 3
 ```
+
+## 5-Read and write with mysql
+
+Code：[5-word_count-mysql.py](https://github.com/pyflink/playgrounds/blob/master/examples/5-word_count-mysql.py)
+
+Run:
+```
+cd playgrounds
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/5-word_count-mysql.py
+```
+Check Results:
+```
+docker-compose exec db mysql -u root -pexample
+mysql> use flink-test;
+mysql> select * from result;
+```
