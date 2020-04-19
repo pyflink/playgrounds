@@ -139,3 +139,45 @@ docker-compose exec jobmanager ./bin/flink run -py /opt/examples/6-write_with_el
 Check Results:
 
 Visit http://localhost:9200/area-cnts/_stats?pretty=true , you can find the value of `_all.primaries.docs.count` and `_all.primaries.docs.deleted` are increasing. 
+
+## 7-Read and write with hbase
+
+Code：[7-read_and_hbase.py](https://github.com/pyflink/playgrounds/blob/master/examples/7-read_and_hbase.py)
+
+[Install hbase](https://hbase.apache.org/book.html#quickstart):
+```bash
+curl -O http://apache.spinellicreations.com/hbase/1.4.13/hbase-1.4.13-bin.tar.gz
+tar zxvf hbase-1.4.13-bin.tar.gz
+echo "export JAVA_HOME=$JAVA_HOME" >> hbase-1.4.13/conf/hbase-env.sh
+echo "\n<configuration>\n  <property>\n    <name>hbase.tmp.dir</name>\n    <value>tmp</value>\n  </property>\n</configuration>" > hbase-1.4.13/conf/hbase-site.xml
+```
+
+start hbase:
+```bash
+sh hbase-1.4.13/bin/start-hbase.sh
+```
+
+create hbase table:
+```bash
+echo "create 'flink-test', 'cf1'" | hbase-1.4.13/bin/hbase shell
+echo "put 'flink-test', 'row1', 'cf1:word', 'flink'" | hbase-1.4.13/bin/hbase shell
+echo "put 'flink-test', 'row2', 'cf1:word', 'flink'" | hbase-1.4.13/bin/hbase shell
+echo "put 'flink-test', 'row3', 'cf1:word', 'pyflink'" | hbase-1.4.13/bin/hbase shell
+echo "create 'result', 'cf1'" | hbase-1.4.13/bin/hbase shell
+```
+
+Run:
+```
+cd playgrounds
+python ./examples/7-read_and_hbase.py
+```
+
+Check Results:
+```bash
+echo "scan 'result'" | hbase-1.4.13/bin/hbase shell
+```
+
+stop hbase:
+```bash
+sh hbase-1.4.13/bin/stop-hbase.sh
+```
