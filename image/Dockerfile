@@ -53,4 +53,12 @@ RUN wget -P /opt/flink/lib/ https://repo.maven.apache.org/maven2/org/apache/flin
     mkdir -p /opt/data/stream; \
     echo "taskmanager.memory.jvm-metaspace.size: 512m" >> /opt/flink/conf/flink-conf.yaml;
 
+# Install hbase and run
+COPY ./hbase-fat.jar /opt/flink/lib
+COPY ./hbase-1.4.13-bin.tar.gz /opt
+#RUN wget -P /opt/ http://apache.spinellicreations.com/hbase/1.4.13/hbase-1.4.13-bin.tar.gz;
+RUN tar zxvf /opt/hbase-1.4.13-bin.tar.gz -C /opt
+RUN echo "export JAVA_HOME=/usr/local/openjdk-8" >> /opt/hbase-1.4.13/conf/hbase-env.sh
+RUN echo "\n<configuration>\n  <property>\n    <name>hbase.tmp.dir</name>\n    <value>tmp</value>  </property>\n</configuration>" > /opt/hbase-1.4.13/conf/hbase-site.xml
+
 WORKDIR /opt/flink

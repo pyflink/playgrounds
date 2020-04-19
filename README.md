@@ -144,46 +144,22 @@ Visit http://localhost:9200/area-cnts/_stats?pretty=true , you can find the valu
 
 Code：[7-read_and_hbase.py](https://github.com/pyflink/playgrounds/blob/master/examples/7-read_and_hbase.py)
 
-[Install hbase](https://hbase.apache.org/book.html#quickstart):
+Start hbase and init hbase table:
 ```bash
-mkdir -p /tmp/hbase && cd /tmp/hbase
-curl -O http://apache.spinellicreations.com/hbase/1.4.13/hbase-1.4.13-bin.tar.gz
-tar zxvf hbase-1.4.13-bin.tar.gz
-echo "export JAVA_HOME=$JAVA_HOME" >> hbase-1.4.13/conf/hbase-env.sh
-echo "\n<configuration>\n  <property>\n    <name>hbase.tmp.dir</name>\n    <value>tmp</value>\n  </property>\n</configuration>" > hbase-1.4.13/conf/hbase-site.xml
-```
-
-start hbase:
-```bash
-sh /tmp/hbase/hbase-1.4.13/bin/start-hbase.sh
-```
-
-create hbase table:
-```bash
-echo "create 'flink-test', 'cf1'" | /tmp/hbase/hbase-1.4.13/bin/hbase shell
-echo "put 'flink-test', 'row1', 'cf1:word', 'flink'" | /tmp/hbase/hbase-1.4.13/bin/hbase shell
-echo "put 'flink-test', 'row2', 'cf1:word', 'flink'" | /tmp/hbase/hbase-1.4.13/bin/hbase shell
-echo "put 'flink-test', 'row3', 'cf1:word', 'pyflink'" | /tmp/hbase/hbase-1.4.13/bin/hbase shell
-echo "create 'result', 'cf1'" | /tmp/hbase/hbase-1.4.13/bin/hbase shell
-```
-
-install pyflink:
-```
-pip install apache-flink
+$ docker ps -a | grep jobmanager | awk -F ' ' '{print $1}'
+d882f796c5b1
+$ docker exec -it d882f796c5b1 /bin/bash
+root@jobmanager:/opt/flink# /opt/examples/hbase/init.sh
 ```
 
 Run:
 ```
 cd playgrounds
-python ./examples/7-read_and_hbase.py
+docker-compose exec jobmanager python /opt/examples/7-read_and_hbase.py
 ```
 
 Check Results:
 ```bash
-echo "scan 'result'" | /tmp/hbase/hbase-1.4.13/bin/hbase shell
-```
-
-stop hbase:
-```bash
-sh /tmp/hbase/hbase-1.4.13/bin/stop-hbase.sh
+docker-compose exec jobmanager /opt/hbase-1.4.13/bin/hbase shell
+hbase(main):005:0> scan 'result'
 ```
