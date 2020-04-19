@@ -146,6 +146,7 @@ Code：[7-read_and_hbase.py](https://github.com/pyflink/playgrounds/blob/master/
 
 [Install hbase](https://hbase.apache.org/book.html#quickstart):
 ```bash
+mkdir -p /tmp/hbase && cd /tmp/hbase
 curl -O http://apache.spinellicreations.com/hbase/1.4.13/hbase-1.4.13-bin.tar.gz
 tar zxvf hbase-1.4.13-bin.tar.gz
 echo "export JAVA_HOME=$JAVA_HOME" >> hbase-1.4.13/conf/hbase-env.sh
@@ -154,16 +155,21 @@ echo "\n<configuration>\n  <property>\n    <name>hbase.tmp.dir</name>\n    <valu
 
 start hbase:
 ```bash
-sh hbase-1.4.13/bin/start-hbase.sh
+sh /tmp/hbase/hbase-1.4.13/bin/start-hbase.sh
 ```
 
 create hbase table:
 ```bash
-echo "create 'flink-test', 'cf1'" | hbase-1.4.13/bin/hbase shell
-echo "put 'flink-test', 'row1', 'cf1:word', 'flink'" | hbase-1.4.13/bin/hbase shell
-echo "put 'flink-test', 'row2', 'cf1:word', 'flink'" | hbase-1.4.13/bin/hbase shell
-echo "put 'flink-test', 'row3', 'cf1:word', 'pyflink'" | hbase-1.4.13/bin/hbase shell
-echo "create 'result', 'cf1'" | hbase-1.4.13/bin/hbase shell
+echo "create 'flink-test', 'cf1'" | /tmp/hbase/hbase-1.4.13/bin/hbase shell
+echo "put 'flink-test', 'row1', 'cf1:word', 'flink'" | /tmp/hbase/hbase-1.4.13/bin/hbase shell
+echo "put 'flink-test', 'row2', 'cf1:word', 'flink'" | /tmp/hbase/hbase-1.4.13/bin/hbase shell
+echo "put 'flink-test', 'row3', 'cf1:word', 'pyflink'" | /tmp/hbase/hbase-1.4.13/bin/hbase shell
+echo "create 'result', 'cf1'" | /tmp/hbase/hbase-1.4.13/bin/hbase shell
+```
+
+install pyflink:
+```
+pip install apache-flink
 ```
 
 Run:
@@ -174,10 +180,10 @@ python ./examples/7-read_and_hbase.py
 
 Check Results:
 ```bash
-echo "scan 'result'" | hbase-1.4.13/bin/hbase shell
+echo "scan 'result'" | /tmp/hbase/hbase-1.4.13/bin/hbase shell
 ```
 
 stop hbase:
 ```bash
-sh hbase-1.4.13/bin/stop-hbase.sh
+sh /tmp/hbase/hbase-1.4.13/bin/stop-hbase.sh
 ```
