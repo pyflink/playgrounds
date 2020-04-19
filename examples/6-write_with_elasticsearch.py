@@ -72,8 +72,8 @@ def register_cnt_sink(st_env):
         Elasticsearch()
             .version("6")
             .host("elasticsearch", 9200, "http")
-            .index("area-cnts")
-            .document_type('areacnt')
+            .index("taxiid-cnts")
+            .document_type('taxiidcnt')
             .key_delimiter("$")) \
         .with_schema(
             Schema()

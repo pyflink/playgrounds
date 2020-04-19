@@ -138,7 +138,8 @@ docker-compose exec jobmanager ./bin/flink run -py /opt/examples/6-write_with_el
 ```
 Check Results:
 
-Visit http://localhost:9200/area-cnts/_stats?pretty=true , you can find the value of `_all.primaries.docs.count` and `_all.primaries.docs.deleted` are increasing. 
+- Check index statistics: http://localhost:9200/taxiid-cnts/_stats?pretty=true , you can find the value of `_all.primaries.docs.count` and `_all.primaries.docs.deleted` are increasing. 
+- Check index details: http://localhost:9200/taxiid-cnts/_search?pretty=true
 
 ## 7-Read and write with hbase
 
