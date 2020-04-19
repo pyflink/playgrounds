@@ -93,8 +93,8 @@ services:
 #      - jobmanager
 #    environment:
 #      FLINK_JOBMANAGER_HOST: jobmanager
-#  hbase:
-#    image: aaionap/hbase:latest
+#  hive:
+#    image: ruili2/hive:latest
 #    depends_on:
 #      - jobmanager
 #    environment:
