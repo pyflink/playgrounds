@@ -126,3 +126,16 @@ docker-compose exec db mysql -u root -pexample
 mysql> use flink-test;
 mysql> select * from result;
 ```
+
+## 6-Write with elasticsearch
+
+Code：[6-write_with_elasticsearch](https://github.com/pyflink/playgrounds/blob/master/examples/6-write_with_elasticsearch.py)
+
+Run:
+```
+cd playgrounds
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/6-write_with_elasticsearch.py
+```
+Check Results:
+
+Visit http://localhost:9200/area-cnts/_stats?pretty=true , you can find the value of `_all.primaries.docs.count` and `_all.primaries.docs.deleted` are increasing. 
