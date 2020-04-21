@@ -59,7 +59,7 @@ services:
       nofile:
         soft: 65536
         hard: 65536
-  sql-client:
+  data-producer:
     image: fhueske/flink-sql-training:1-FLINK-1.9-scala_2.11
     command: "java -classpath /opt/data/data-producer.jar com.ververica.sql_training.data_producer.TaxiRecordProducer --input file /opt/data --output kafka kafka:9092 --speedup 10.0"
     depends_on:
