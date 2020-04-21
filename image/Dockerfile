@@ -54,7 +54,8 @@ RUN wget -P /opt/flink/lib/ https://repo.maven.apache.org/maven2/org/apache/flin
 # Create data folders
     mkdir -p /opt/data; \
     mkdir -p /opt/data/stream; \
-    echo "taskmanager.memory.jvm-metaspace.size: 512m" >> /opt/flink/conf/flink-conf.yaml;
+    echo "taskmanager.memory.jvm-metaspace.size: 512m" >> /opt/flink/conf/flink-conf.yaml; \
+    echo "rest.port: 8088" >> /opt/flink/conf/flink-conf.yaml;
 
 # Install hbase and run
 COPY ./hbase-fat.jar /opt/flink/lib
