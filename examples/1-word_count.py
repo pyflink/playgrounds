@@ -30,4 +30,4 @@ t_env.from_path('mySource') \
     .select('word, count(1)') \
     .insert_into('mySink')
 
-t_env.execute("tutorial_job")
+t_env.execute("1-word_count")

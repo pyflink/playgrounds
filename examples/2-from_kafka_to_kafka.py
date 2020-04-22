@@ -24,7 +24,7 @@ def from_kafka_to_kafka_demo():
     st_env.from_path("source").insert_into("sink")
 
     # execute
-    st_env.execute("from_kafka_to_kafka")
+    st_env.execute("2-from_kafka_to_kafka")
 
 
 def register_rides_source(st_env):
