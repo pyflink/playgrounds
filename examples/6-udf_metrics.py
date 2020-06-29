@@ -41,7 +41,7 @@ def python_udf_metric_demo():
     st_env.from_path("source").select("add(rideId, taxiId)").insert_into("sink")
 
     # execute
-    st_env.execute("6-udf_metrics.py")
+    st_env.execute("6-udf_metrics")
 
 
 def register_rides_source(st_env):

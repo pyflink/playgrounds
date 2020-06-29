@@ -1,6 +1,18 @@
 # Playgrounds
 Playgrounds aims to provide a quick-start environment and examples for users to quickly understand the features of PyFlink. Playgrounds setup environment with docker-compose and integrates PyFlink, Kafka, Python to make it easy for experience. The current Playgrounds examples are based on the latest PyFlink (1.11-snapshot).
 
+# Create Docker Image
+
+```bash
+cd image
+
+# create docker image
+docker build --tag pyflink/playgrounds:1.11.0-rc2 .
+
+# publish docker image
+docker push pyflink/playgrounds:1.11.0-rc2
+```
+
 # Environment Setup
 
 1. Install [Docker](https://www.docker.com). 
@@ -106,7 +118,7 @@ docker-compose exec jobmanager ./bin/flink run -py /opt/examples/4-udf_add_with_
 ```
 Check Results:
 
-A result file `udf_add_output` will be added in the path `playgrounds/examples/data`, with the following content：
+A result file `udf_add_with_dependency_output` will be added in the path `playgrounds/examples/data`, with the following content：
 ```
 3
 ```
@@ -123,7 +135,7 @@ docker-compose exec jobmanager ./bin/flink run -py /opt/examples/5-pandas_udf_ad
 ```
 Check Results:
 
-A result file `udf_add_output` will be added in the path `playgrounds/examples/data`, with the following content：
+A result file `pandas_udf_add_output` will be added in the path `playgrounds/examples/data`, with the following content：
 ```
 3
 ```
@@ -137,10 +149,5 @@ Run:
 cd playgrounds
 docker-compose exec jobmanager ./bin/flink run -py /opt/examples/6-udf_metrics.py
 ```
-Check Results:
 
-A result file `udf_add_output` will be added in the path `playgrounds/examples/data`, with the following content：
-```
-3
-```
-
+Visit http://localhost:8081/#/overview , select the running job and check the metrics.

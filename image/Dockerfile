@@ -41,9 +41,10 @@ RUN set -ex; \
   pip install -r /opt/requirements.txt
 
 # Install pyflnk
-COPY ./flink-1.11-SNAPSHOT/opt/apache-flink-1.11.dev0.tar.gz /opt
+COPY ./apache-flink-1.11.0.tar.gz /opt
 RUN set -ex; \
-  python -m pip install /opt/apache-flink-1.11.dev0.tar.gz
+  python -m pip install /opt/apache-flink-1.11.0.tar.gz \
+  rm -f /opt/apache-flink-1.11.0.tar.gz
 
 # Grab gosu for easy step-down from root
 ENV GOSU_VERSION 1.11
@@ -71,9 +72,9 @@ RUN groupadd --system --gid=9999 flink && \
     useradd --system --home-dir $FLINK_HOME --uid=9999 --gid=flink flink
 WORKDIR $FLINK_HOME
 
-# Build flink and put flink-1.11-SNAPSHOT in the current folder.
+# Build flink and put flink-1.11.0 in the current folder.
 # Remember also to put Kafka, Json jars into the flink lib folder
-ADD ./flink-1.11-SNAPSHOT /opt/flink
+ADD ./flink-1.11.0 /opt/flink
 
 # Configure container
 COPY docker-entrypoint.sh /

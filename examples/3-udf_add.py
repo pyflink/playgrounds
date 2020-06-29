@@ -1,34 +1,39 @@
-from pyflink.datastream import StreamExecutionEnvironment
-from pyflink.table import StreamTableEnvironment, DataTypes
-from pyflink.table.descriptors import Schema, OldCsv, FileSystem
+from pyflink.table import DataTypes, EnvironmentSettings, BatchTableEnvironment
 from pyflink.table.udf import udf
 
 # Init environment
-env = StreamExecutionEnvironment.get_execution_environment()
-env.set_parallelism(1)
-t_env = StreamTableEnvironment.create(env)
+environment_settings = EnvironmentSettings.new_instance().use_blink_planner().in_batch_mode().build()
+t_env = BatchTableEnvironment.create(environment_settings=environment_settings)
+t_env._j_tenv.getPlanner().getExecEnv().setParallelism(1)
+
+t_env.get_config().get_configuration().set_boolean('python.fn-execution.memory.managed', True)
 
 # Define and register UDF
 add = udf(lambda i, j: i + j, [DataTypes.BIGINT(), DataTypes.BIGINT()], DataTypes.BIGINT())
 t_env.register_function("add", add)
 
 # Register Source
-t_env.connect(FileSystem().path('/opt/examples/data/udf_add_input')) \
-    .with_format(OldCsv()
-                 .field('a', DataTypes.BIGINT())
-                 .field('b', DataTypes.BIGINT())) \
-    .with_schema(Schema()
-                 .field('a', DataTypes.BIGINT())
-                 .field('b', DataTypes.BIGINT())) \
-    .create_temporary_table('mySource')
+t_env.execute_sql("""
+        CREATE TABLE mySource (
+          a BIGINT,
+          b BIGINT
+        ) WITH (
+          'connector' = 'filesystem',
+          'format' = 'csv',
+          'path' = '/opt/examples/data/udf_add_input'
+        )
+    """)
 
 # Register Sink
-t_env.connect(FileSystem().path('/opt/examples/data/udf_add_output')) \
-    .with_format(OldCsv()
-                 .field('sum', DataTypes.BIGINT())) \
-    .with_schema(Schema()
-                 .field('sum', DataTypes.BIGINT())) \
-    .create_temporary_table('mySink')
+t_env.execute_sql("""
+        CREATE TABLE mySink (
+          `sum` BIGINT
+        ) WITH (
+          'connector' = 'filesystem',
+          'format' = 'csv',
+          'path' = '/opt/examples/data/udf_add_output'
+        )
+    """)
 
 # Query
 t_env.from_path('mySource')\
