@@ -48,7 +48,7 @@ You can check whether the environment is running correctly by visiting Flink Web
 
 ## 1-WordCount
 
-Code：[1-word_count.py](https://github.com/pyflink/playgrounds/blob/1.11-snapshot/examples/1-word_count.py)
+Code：[1-word_count.py](https://github.com/pyflink/playgrounds/blob/1.11/examples/1-word_count.py)
 
 Run:
 ```
@@ -65,7 +65,7 @@ pyflink	1
 
 ## 2-Read and write with Kafka
 
-Code：[2-from_kafka_to_kafka.py](https://github.com/pyflink/playgrounds/blob/1.11-snapshot/examples/2-from_kafka_to_kafka.py)
+Code：[2-from_kafka_to_kafka.py](https://github.com/pyflink/playgrounds/blob/1.11/examples/2-from_kafka_to_kafka.py)
 
 Run:
 ```
@@ -91,7 +91,7 @@ Visit http://localhost:8081/#/overview , select the running job and click the `C
 
 ## 3-Python UDF
 
-Code：[3-udf_add.py](https://github.com/pyflink/playgrounds/blob/1.11-snapshot/examples/3-udf_add.py)
+Code：[3-udf_add.py](https://github.com/pyflink/playgrounds/blob/1.11/examples/3-udf_add.py)
 
 Run:
 ```
@@ -107,7 +107,7 @@ A result file `udf_add_output` will be added in the path `playgrounds/examples/d
 
 ## 4-Python UDF with dependenciy
 
-Code：[4-udf_add_with_dependency.py](https://github.com/pyflink/playgrounds/blob/1.11-snapshot/examples/4-udf_add_with_dependency.py)
+Code：[4-udf_add_with_dependency.py](https://github.com/pyflink/playgrounds/blob/1.11/examples/4-udf_add_with_dependency.py)
 
 Check the [Python Dependency management](https://ci.apache.org/projects/flink/flink-docs-master/dev/table/python/dependency_management.html) for more details about how to handle Python UDF dependencies。
 
@@ -126,7 +126,7 @@ A result file `udf_add_with_dependency_output` will be added in the path `playgr
 
 ## 5-Python Pandas UDF
 
-Code：[5-pandas_udf_add.py](https://github.com/pyflink/playgrounds/blob/1.11-snapshot/examples/5-pandas_udf_add.py)
+Code：[5-pandas_udf_add.py](https://github.com/pyflink/playgrounds/blob/1.11/examples/5-pandas_udf_add.py)
 
 Run:
 ```
@@ -142,7 +142,7 @@ A result file `pandas_udf_add_output` will be added in the path `playgrounds/exa
 
 ## 6-Python UDF with Metrics
 
-Code：[6-udf_metrics.py](https://github.com/pyflink/playgrounds/blob/1.11-snapshot/examples/6-udf_metrics.py)
+Code：[6-udf_metrics.py](https://github.com/pyflink/playgrounds/blob/1.11/examples/6-udf_metrics.py)
 
 Run:
 ```
@@ -151,3 +151,31 @@ docker-compose exec jobmanager ./bin/flink run -py /opt/examples/6-udf_metrics.p
 ```
 
 Visit http://localhost:8081/#/overview , select the running job and check the metrics.
+
+## 7-Python UDF used in Java Table API jobs
+
+Code: [BlinkBatchPythonUdfSqlJob.java](https://github.com/pyflink/playgrounds/blob/1.11/examples/java/src/main/java/BlinkBatchPythonUdfSqlJob.java)
+
+Compile:
+```
+cd examples/java
+mvn clean package
+cd -
+```
+
+Run:
+```
+docker-compose exec jobmanager ./bin/flink run -j /opt/examples/java/target/pyflink-playgrounds.jar -c BlinkBatchPythonUdfSqlJob -pyfs /opt/examples/utils/udfs.py
+```
+
+## 8-Python UDF used in pure-SQL jobs
+
+SQL Statement
+```
+insert into sink select add_one(a) from (VALUES (1), (2), (3)) as source (a)
+```
+
+Run:
+```
+docker-compose exec jobmanager ./bin/sql-client.sh embedded --environment /opt/examples/sql/sql-client.yaml -pyfs /opt/examples/utils/udfs.py --update "insert into sink select add_one(a) from (VALUES (1), (2), (3)) as source (a)"
+```
