@@ -1,5 +1,5 @@
 # Playgrounds
-Playgrounds aims to provide a quick-start environment and examples for users to quickly understand the features of PyFlink. Playgrounds setup environment with docker-compose and integrates PyFlink, Kafka, Python to make it easy for experience. The current Playgrounds examples are based on the latest PyFlink (1.11-snapshot).
+Playgrounds aims to provide a quick-start environment and examples for users to quickly understand the features of PyFlink. Playgrounds setup environment with docker-compose and integrates PyFlink, Kafka, Python to make it easy for experience. The current Playgrounds examples are based on the latest PyFlink (1.11).
 
 # Create Docker Image
 
@@ -18,7 +18,7 @@ docker push pyflink/playgrounds:1.11.0
 1. Install [Docker](https://www.docker.com). 
 2. Get Docker Compose configuration
 ```
-git clone -b 1.11-snapshot https://github.com/pyflink/playgrounds.git
+git clone -b 1.11 https://github.com/pyflink/playgrounds.git
 ```
 3. Setup environment
 * **Linux & MacOS**
