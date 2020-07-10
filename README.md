@@ -43,7 +43,7 @@ You can check whether the environment is running correctly by visiting Flink Web
 2. Read and write with Kafka
 3. Python UDF
 4. Python UDF with dependencies
-5. Python Pandas UDF
+5. 向量化Python UDF
 6. Python UDF with User-defined metrics
 7. Python UDF used in Java Table API jobs
 8. Python UDF used in pure-SQL jobs
@@ -127,7 +127,7 @@ A result file `udf_add_with_dependency_output` will be added in the path `playgr
 ```
 
 
-## 5-Python Pandas UDF
+## 5-向量化Python UDF
 
 Code：[5-pandas_udf_add.py](https://github.com/pyflink/playgrounds/blob/1.11/examples/5-pandas_udf_add.py)
 
