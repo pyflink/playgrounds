@@ -45,6 +45,9 @@ You can check whether the environment is running correctly by visiting Flink Web
 4. Python UDF with dependencies
 5. Python Pandas UDF
 6. Python UDF with User-defined metrics
+7. Python UDF used in Java Table API jobs
+8. Python UDF used in pure-SQL jobs
+
 
 ## 1-WordCount
 
