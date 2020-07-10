@@ -1,7 +1,7 @@
 version: '2.1'
 services:
   jobmanager:
-    image: pyflink/playgrounds:1.11-snapshot
+    image: pyflink/playgrounds:1.11.0
     volumes:
       - ./examples:/opt/examples
     hostname: "jobmanager"
@@ -13,7 +13,7 @@ services:
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
   taskmanager:
-    image: pyflink/playgrounds:1.11-snapshot
+    image: pyflink/playgrounds:1.11.0
     volumes:
       - ./examples:/opt/examples
     expose:
@@ -42,32 +42,4 @@ services:
       KAFKA_CREATE_TOPICS: "Rides:1:1, Fares:1:1, DriverChanges:1:1, TempResults:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.3.1
-    environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - discovery.type=single-node
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
-  sql-client:
-    image: fhueske/flink-sql-training:1-FLINK-1.9-scala_2.11
-    command: "java -classpath /opt/data/data-producer.jar com.ververica.sql_training.data_producer.TaxiRecordProducer --input file /opt/data --output kafka kafka:9092 --speedup 10.0"
-    depends_on:
-      - kafka
-      - jobmanager
-      - elasticsearch
-    environment:
-      FLINK_JOBMANAGER_HOST: jobmanager
-      ZOOKEEPER_CONNECT: zookeeper
-      KAFKA_BOOTSTRAP: kafka
-      ES_HOST: elasticsearch
+

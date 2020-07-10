@@ -7,10 +7,10 @@ Playgrounds aims to provide a quick-start environment and examples for users to 
 cd image
 
 # create docker image
-docker build --tag pyflink/playgrounds:1.11.0-rc2 .
+docker build --tag pyflink/playgrounds:1.11.0 .
 
 # publish docker image
-docker push pyflink/playgrounds:1.11.0-rc2
+docker push pyflink/playgrounds:1.11.0
 ```
 
 # Environment Setup
