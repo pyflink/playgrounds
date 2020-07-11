@@ -60,7 +60,7 @@ docker-compose exec jobmanager ./bin/flink run -py /opt/examples/1-word_count.py
 ```
 Check Results:
 
-A result file `word_count_output` will be added in the path `playgrounds/examples/data`, with the following content：
+A result file `word_count_output` will be added in the path `examples/data/word_count_output/`, with the following content：
 ```
 flink	2
 pyflink	1
@@ -103,7 +103,7 @@ docker-compose exec jobmanager ./bin/flink run -py /opt/examples/3-udf_add.py
 ```
 Check Results:
 
-A result file `udf_add_output` will be added in the path `playgrounds/examples/data`, with the following content：
+A result file `udf_add_output` will be added in the path `examples/data/udf_add_output/`, with the following content：
 ```
 3
 ```
@@ -121,7 +121,7 @@ docker-compose exec jobmanager ./bin/flink run -py /opt/examples/4-udf_add_with_
 ```
 Check Results:
 
-A result file `udf_add_with_dependency_output` will be added in the path `playgrounds/examples/data`, with the following content：
+A result file `udf_add_with_dependency_output` will be added in the path `examples/data/udf_add_with_dependency_output/`, with the following content：
 ```
 3
 ```
@@ -138,7 +138,7 @@ docker-compose exec jobmanager ./bin/flink run -py /opt/examples/5-pandas_udf_ad
 ```
 Check Results:
 
-A result file `pandas_udf_add_output` will be added in the path `playgrounds/examples/data`, with the following content：
+A result file `pandas_udf_add_output` will be added in the path `examples/data/pandas_udf_add_output/`, with the following content：
 ```
 3
 ```
@@ -181,4 +181,12 @@ insert into sink select add_one(a) from (VALUES (1), (2), (3)) as source (a)
 Run:
 ```
 docker-compose exec jobmanager ./bin/sql-client.sh embedded --environment /opt/examples/sql/sql-client.yaml -pyfs /opt/examples/utils/udfs.py --update "insert into sink select add_one(a) from (VALUES (1), (2), (3)) as source (a)"
+```
+Check Results:
+
+A result file `pandas_udf_add_output` will be added in the path `examples/data/sql-test-out/`, with the following content：
+```
+2
+3
+4
 ```
