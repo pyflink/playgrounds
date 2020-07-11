@@ -173,6 +173,8 @@ docker-compose exec jobmanager ./bin/flink run -j /opt/examples/java/target/pyfl
 
 ## 8-Python UDF used in pure-SQL jobs
 
+SQL resource file: [sql-client.yaml](https://github.com/pyflink/playgrounds/blob/1.11/examples/sql/sql-client.yaml)
+
 SQL Statement
 ```
 insert into sink select add_one(a) from (VALUES (1), (2), (3)) as source (a)
