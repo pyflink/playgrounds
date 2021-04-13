@@ -35,7 +35,7 @@ def batch_map_state_test():
 
     seq_num_source = NumberSequenceSource(1, 1000)
 
-    output_path = '/opt/examples/output/batch_map_state'
+    output_path = '/opt/examples/datastream/output/batch_map_state'
     file_sink = FileSink \
         .for_row_format(output_path, Encoder.simple_string_encoder()) \
         .with_output_file_config(OutputFileConfig.builder().with_part_prefix('pre').with_part_suffix('suf').build()) \

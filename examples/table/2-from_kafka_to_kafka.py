@@ -1,7 +1,6 @@
-
 from pyflink.datastream import StreamExecutionEnvironment, TimeCharacteristic
 from pyflink.table import StreamTableEnvironment, DataTypes, EnvironmentSettings
-from pyflink.table.descriptors import Schema, Kafka, Json, Rowtime
+from pyflink.table.descriptors import Schema, Kafka, Json
 
 
 def from_kafka_to_kafka_demo():

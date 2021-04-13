@@ -41,7 +41,7 @@ Code：[1-word_count.py](https://github.com/pyflink/playgrounds/blob/master/exam
 Run:
 ```
 cd playgrounds
-docker-compose exec jobmanager ./bin/flink run -py /opt/examples/1-word_count.py
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/1-word_count.py
 ```
 Check Results:
 
@@ -58,7 +58,7 @@ Code：[2-from_kafka_to_kafka.py](https://github.com/pyflink/playgrounds/blob/ma
 Run:
 ```
 cd playgrounds
-docker-compose exec jobmanager ./bin/flink run -py /opt/examples/2-from_kafka_to_kafka.py
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/2-from_kafka_to_kafka.py
 ```
 
 Check Results:
@@ -84,7 +84,7 @@ Code：[3-udf_add.py](https://github.com/pyflink/playgrounds/blob/master/example
 Run:
 ```
 cd playgrounds
-docker-compose exec jobmanager ./bin/flink run -py /opt/examples/3-udf_add.py
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/3-udf_add.py
 ```
 Check Results:
 
@@ -102,7 +102,7 @@ Check the [Python Dependency management](https://ci.apache.org/projects/flink/fl
 Run:
 ```
 cd playgrounds
-docker-compose exec jobmanager ./bin/flink run -py /opt/examples/4-udf_add_with_dependency.py
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/4-udf_add_with_dependency.py
 ```
 Check Results:
 
@@ -118,7 +118,7 @@ Code：[5-word_count-mysql.py](https://github.com/pyflink/playgrounds/blob/maste
 Run:
 ```
 cd playgrounds
-docker-compose exec jobmanager ./bin/flink run -py /opt/examples/5-word_count-mysql.py
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/5-word_count-mysql.py
 ```
 Check Results:
 ```
@@ -134,7 +134,7 @@ Code：[6-write_with_elasticsearch](https://github.com/pyflink/playgrounds/blob/
 Run:
 ```
 cd playgrounds
-docker-compose exec jobmanager ./bin/flink run -py /opt/examples/6-write_with_elasticsearch.py
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/6-write_with_elasticsearch.py
 ```
 Check Results:
 
@@ -150,13 +150,13 @@ Start hbase and init hbase table:
 $ docker ps -a | grep jobmanager | awk -F ' ' '{print $1}'
 d882f796c5b1
 $ docker exec -it d882f796c5b1 /bin/bash
-root@jobmanager:/opt/flink# /opt/examples/hbase/init.sh
+root@jobmanager:/opt/flink# /opt/examples/table/hbase/init.sh
 ```
 
 Run:
 ```
 cd playgrounds
-docker-compose exec jobmanager python /opt/examples/7-read_and_hbase.py
+docker-compose exec jobmanager python /opt/examples/table/7-read_and_hbase.py
 ```
 
 Check Results:
