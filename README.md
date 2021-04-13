@@ -1,6 +1,10 @@
 # Playgrounds
 Playgrounds aims to provide a quick-start environment and examples for users to quickly understand the features of PyFlink. Playgrounds setup environment with docker-compose and integrates PyFlink, Kafka, Python to make it easy for experience. The current Playgrounds examples are based on the latest PyFlink (1.13.0).
 
+# Usage
+
+Please checkout specific branches on how to use PyFlink in a specific Flink version as PyFlink is still in active development and more and more functionalities are added in each version.
+
 # Create Docker Image
 
 ```bash
@@ -212,7 +216,7 @@ docker-compose exec jobmanager ./bin/sql-client.sh embedded --environment /opt/e
 ```
 
 Check Results:
-A result file will be added in the path `examples/table/data/sql-test-out/`, with the following content：
+A result file will be added in the path `/opt/examples/table/data/sql-test-out/`, with the following content：
 ```
 2
 3
