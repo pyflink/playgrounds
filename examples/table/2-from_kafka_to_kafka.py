@@ -56,7 +56,7 @@ def register_rides_source(st_env):
             .field("psgCnt", DataTypes.INT())
             .field("eventTime", DataTypes.STRING())) \
         .in_append_mode() \
-        .register_table_source("source")
+        .create_temporary_table("source")
 
 
 def register_rides_sink(st_env):
@@ -89,7 +89,7 @@ def register_rides_sink(st_env):
             .field("psgCnt", DataTypes.INT())
             .field("rideTime", DataTypes.STRING())) \
         .in_append_mode() \
-        .register_table_sink("sink")
+        .create_temporary_table("sink")
 
 
 if __name__ == '__main__':

@@ -1,0 +1,20 @@
+tables:
+- name: sink
+  type: sink-table
+  update-mode: append
+  schema:
+  - name: a
+    type: BIGINT
+  connector:
+    type: filesystem
+    path: "/opt/examples/table/data/sql-test-out/result.csv"
+  format:
+    type: csv
+    fields:
+    - name: a
+      type: BIGINT
+
+functions:
+- name: add_one
+  from: python
+  fully-qualified-name: udfs.add_one

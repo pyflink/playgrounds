@@ -1,10 +1,23 @@
-
 from pyflink.datastream import StreamExecutionEnvironment, TimeCharacteristic
 from pyflink.table import StreamTableEnvironment, DataTypes, EnvironmentSettings
-from pyflink.table.descriptors import Schema, Kafka, Json, Rowtime, Elasticsearch
+from pyflink.table.descriptors import Schema, Kafka, Json
+from pyflink.table.udf import ScalarFunction, udf
 
 
-def area_cnts():
+class MyAdd(ScalarFunction):
+
+    def open(self, function_context):
+        mg = function_context.get_metric_group()
+        # register metrics
+        self.counter = mg.add_group("aaa", "bbb").counter("my_counter")
+
+    def eval(self, a, b):
+        # invoke increase() for the counter
+        self.counter.inc()
+        return a + b
+
+
+def python_udf_metric_demo():
     s_env = StreamExecutionEnvironment.get_execution_environment()
     s_env.set_stream_time_characteristic(TimeCharacteristic.EventTime)
     s_env.set_parallelism(1)
@@ -18,16 +31,16 @@ def area_cnts():
 
     # register source and sink
     register_rides_source(st_env)
-    register_cnt_sink(st_env)
+    register_rides_sink(st_env)
+
+    add = udf(MyAdd(), [DataTypes.BIGINT(), DataTypes.BIGINT()], DataTypes.BIGINT())
+    st_env.register_function("add", add)
 
     # query
-    st_env.from_path("source")\
-        .group_by("taxiId")\
-        .select("taxiId, count(1) as cnt")\
-        .insert_into("sink")
+    st_env.from_path("source").select("add(rideId, taxiId)").insert_into("sink")
 
     # execute
-    st_env.execute("6-write_with_elasticsearch")
+    st_env.execute("6-udf_metrics")
 
 
 def register_rides_source(st_env):
@@ -45,7 +58,7 @@ def register_rides_source(st_env):
             .schema(DataTypes.ROW([
             DataTypes.FIELD("rideId", DataTypes.BIGINT()),
             DataTypes.FIELD("isStart", DataTypes.BOOLEAN()),
-            DataTypes.FIELD("eventTime", DataTypes.TIMESTAMP()),
+            DataTypes.FIELD("eventTime", DataTypes.STRING()),
             DataTypes.FIELD("lon", DataTypes.FLOAT()),
             DataTypes.FIELD("lat", DataTypes.FLOAT()),
             DataTypes.FIELD("psgCnt", DataTypes.INT()),
@@ -58,33 +71,28 @@ def register_rides_source(st_env):
             .field("lon", DataTypes.FLOAT())
             .field("lat", DataTypes.FLOAT())
             .field("psgCnt", DataTypes.INT())
-            .field("rideTime", DataTypes.TIMESTAMP())
-            .rowtime(
-            Rowtime()
-                .timestamps_from_field("eventTime")
-                .watermarks_periodic_bounded(60000))) \
+            .field("eventTime", DataTypes.STRING())) \
         .in_append_mode() \
-        .register_table_source("source")
+        .create_temporary_table("source")
 
 
-def register_cnt_sink(st_env):
-    st_env.connect(
-        Elasticsearch()
-            .version("6")
-            .host("elasticsearch", 9200, "http")
-            .index("taxiid-cnts")
-            .document_type('taxiidcnt')
-            .key_delimiter("$")) \
-        .with_schema(
-            Schema()
-                .field("taxiId", DataTypes.BIGINT())
-                .field("cnt", DataTypes.BIGINT())) \
-        .with_format(
-           Json()
-               .derive_schema()) \
-        .in_upsert_mode() \
-        .register_table_sink("sink")
+def register_rides_sink(st_env):
+    st_env \
+        .connect(  # declare the external system to connect to
+        Kafka()
+            .version("universal")
+            .topic("TempResults")
+            .property("zookeeper.connect", "zookeeper:2181")
+            .property("bootstrap.servers", "kafka:9092")) \
+        .with_format(  # declare a format for this system
+        Json()
+            .fail_on_missing_field(True)
+            .schema(DataTypes.ROW([DataTypes.FIELD("sum_value", DataTypes.BIGINT())]))) \
+        .with_schema(  # declare the schema of the table
+        Schema().field("sum_value", DataTypes.BIGINT())) \
+        .in_append_mode() \
+        .create_temporary_table("sink")
 
 
 if __name__ == '__main__':
-    area_cnts()
+    python_udf_metric_demo()

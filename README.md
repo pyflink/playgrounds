@@ -1,5 +1,17 @@
 # Playgrounds
-Playgrounds aims to provide a quick-start environment and examples for users to quickly understand the features of PyFlink. Playgrounds setup environment with docker-compose and integrates PyFlink, Kafka, Python to make it easy for experience. The current Playgrounds examples are based on the latest PyFlink (1.10.0).
+Playgrounds aims to provide a quick-start environment and examples for users to quickly understand the features of PyFlink. Playgrounds setup environment with docker-compose and integrates PyFlink, Kafka, Python to make it easy for experience. The current Playgrounds examples are based on the latest PyFlink (1.13.0).
+
+# Create Docker Image
+
+```bash
+cd image
+ 
+# create docker image
+docker build --tag pyflink/playgrounds:1.13.0-rc0 .
+
+# publish docker image
+docker push pyflink/playgrounds:1.13.0-rc0
+```
 
 # Environment Setup
 
@@ -32,11 +44,13 @@ You can check whether the environment is running correctly by visiting Flink Web
 3. Python UDF
 4. Python UDF with dependencies
 5. Python Pandas UDF
-6. Python UDF with Metrics
+6. Python UDF with User-defined Metrics
+7. Python UDF used in Java Table API jobs
+8. Python UDF used in pure-SQL jobs
 
 ## 1-WordCount
 
-Code：[1-word_count.py](https://github.com/pyflink/playgrounds/blob/master/examples/1-word_count.py)
+Code：[1-word_count.py](https://github.com/pyflink/playgrounds/blob/master/examples/table/1-word_count.py)
 
 Run:
 ```
@@ -45,7 +59,14 @@ docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/1-word_co
 ```
 Check Results:
 
-A result file `word_count_output` will be added in the path `playgrounds/examples/data`, with the following content：
+A result file will be added in the path `/opt/examples/table/data/word_count_output/`, 
+
+Check Results:
+```
+docker-compose exec taskmanager cat /opt/examples/table/data/word_count_output/part-aec367b4-5e68-4958-bbb9-98b264e0d314-cp-0-task-0-file-0
+```
+
+The results look like：
 ```
 flink	2
 pyflink	1
@@ -53,7 +74,7 @@ pyflink	1
 
 ## 2-Read and write with Kafka
 
-Code：[2-from_kafka_to_kafka.py](https://github.com/pyflink/playgrounds/blob/master/examples/2-from_kafka_to_kafka.py)
+Code：[2-from_kafka_to_kafka.py](https://github.com/pyflink/playgrounds/blob/master/examples/table/2-from_kafka_to_kafka.py)
 
 Run:
 ```
@@ -79,88 +100,121 @@ Visit http://localhost:8081/#/overview , select the running job and click the `C
 
 ## 3-Python UDF
 
-Code：[3-udf_add.py](https://github.com/pyflink/playgrounds/blob/master/examples/3-udf_add.py)
+Code：[3-udf_add.py](https://github.com/pyflink/playgrounds/blob/master/examples/table/3-udf_add.py)
 
 Run:
 ```
 cd playgrounds
 docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/3-udf_add.py
 ```
-Check Results:
 
-A result file `udf_add_output` will be added in the path `playgrounds/examples/data`, with the following content：
+A result file will be added in the path `/opt/examples/table/data/udf_add_output`
+
+Check Results:
+```
+docker-compose exec taskmanager cat /opt/examples/table/data/udf_add_output/part-933b41cd-9388-4ba8-9437-cbf5f87c2469-cp-0-task-0-file-0
+```
+
+The results look like：
+
 ```
 3
 ```
 
-## 4-Python UDF with dependenciy
+## 4-Python UDF with dependency
 
-Code：[4-udf_add_with_dependency.py](https://github.com/pyflink/playgrounds/blob/master/examples/4-udf_add_with_dependency.py)
+Code：[4-udf_add_with_dependency.py](https://github.com/pyflink/playgrounds/blob/master/examples/table/4-udf_add_with_dependency.py)
 
-Check the [Python Dependency management](https://ci.apache.org/projects/flink/flink-docs-master/dev/table/python/dependency_management.html) for more details about how to handle Python UDF dependencies。
+Check the [Python Dependency management](https://ci.apache.org/projects/flink/flink-docs-master/docs/dev/python/table/dependency_management/) for more details about how to handle Python UDF dependencies。
 
 Run:
 ```
 cd playgrounds
 docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/4-udf_add_with_dependency.py
 ```
-Check Results:
 
-A result file `udf_add_output` will be added in the path `playgrounds/examples/data`, with the following content：
+A result file will be added in the path `/opt/examples/table/data/udf_add_with_dependency_output`
+
+Check Results:
+```
+docker-compose exec taskmanager cat /opt/examples/table/data/udf_add_with_dependency_output/part-589bdd40-8cfe-4f50-9484-ae46629e0a90-0-0
+```
+
+The results look like：
+
 ```
 3
 ```
 
-## 5-Read and write with mysql
+## 5-Pandas UDF
 
-Code：[5-word_count-mysql.py](https://github.com/pyflink/playgrounds/blob/master/examples/5-word_count-mysql.py)
-
-Run:
-```
-cd playgrounds
-docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/5-word_count-mysql.py
-```
-Check Results:
-```
-docker-compose exec db mysql -u root -pexample
-mysql> use flink-test;
-mysql> select * from result;
-```
-
-## 6-Write with elasticsearch
-
-Code：[6-write_with_elasticsearch](https://github.com/pyflink/playgrounds/blob/master/examples/6-write_with_elasticsearch.py)
+Code：[5-pandas_udf_add.py](https://github.com/pyflink/playgrounds/blob/master/examples/table/5-pandas_udf_add.py)
 
 Run:
 ```
 cd playgrounds
-docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/6-write_with_elasticsearch.py
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/5-pandas_udf_add.py
 ```
+
+A result file will be added in the path `/opt/examples/table/data/pandas_udf_add_output/`
+
 Check Results:
-
-- Check index statistics: http://localhost:9200/taxiid-cnts/_stats?pretty=true , you can find the value of `_all.primaries.docs.count` and `_all.primaries.docs.deleted` are increasing. 
-- Check index details: http://localhost:9200/taxiid-cnts/_search?pretty=true
-
-## 7-Read and write with hbase
-
-Code：[7-read_and_hbase.py](https://github.com/pyflink/playgrounds/blob/master/examples/7-read_and_hbase.py)
-
-Start hbase and init hbase table:
-```bash
-$ docker ps -a | grep jobmanager | awk -F ' ' '{print $1}'
-d882f796c5b1
-$ docker exec -it d882f796c5b1 /bin/bash
-root@jobmanager:/opt/flink# /opt/examples/table/hbase/init.sh
 ```
+docker-compose exec taskmanager cat /opt/examples/table/data/pandas_udf_add_output/part-1e9a35a7-28c3-4a46-bb84-a2fb1d62e0ed-cp-0-task-0-file-0
+```
+
+The results look like：
+
+```
+3
+```
+
+## 6-Python UDF with Metrics
+
+Code：[6-udf_metrics.py](https://github.com/pyflink/playgrounds/blob/master/examples/table/6-udf_metrics.py)
 
 Run:
 ```
 cd playgrounds
-docker-compose exec jobmanager python /opt/examples/table/7-read_and_hbase.py
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/6-udf_metrics.py
+```
+
+Visit http://localhost:8081/#/overview , select the running job and check the metrics.
+
+## 7-Python UDF used in Java Table API jobs
+
+Code：[BlinkBatchPythonUdfSqlJob.java](https://github.com/pyflink/playgrounds/blob/master/examples/table/java/src/main/java/BlinkBatchPythonUdfSqlJob.java)
+
+Compile:
+```
+cd examples/table/java
+mvn clean package
+cd -
+```
+
+Run:
+```
+docker-compose exec jobmanager ./bin/flink run -d -j /opt/examples/table/java/target/pyflink-playgrounds.jar -c BlinkBatchPythonUdfSqlJob -pyfs /opt/examples/table/utils/udfs.py
+```
+
+## 8-Python UDF used in pure-SQL jobs
+
+SQL resource file: [sql-client.yaml](https://github.com/pyflink/playgrounds/blob/master/examples/table/sql/sql-client.yaml)
+
+SQL Statement:
+```
+insert into sink select add_one(a) from (VALUES (1), (2), (3)) as source (a)
+```
+
+Run:
+```
+docker-compose exec jobmanager ./bin/sql-client.sh embedded --environment /opt/examples/table/sql/sql-client.yaml -pyfs /opt/examples/table/utils/udfs.py --update "insert into sink select add_one(a) from (VALUES (1), (2), (3)) as source (a)"
 ```
 
 Check Results:
-```bash
-docker-compose exec jobmanager /opt/hbase-1.4.13/bin/hbase shell
-hbase(main):005:0> scan 'result'
+A result file will be added in the path `examples/table/data/sql-test-out/`, with the following content：
+```
+2
+3
+4
 ```

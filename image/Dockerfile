@@ -20,7 +20,13 @@
 # Build PyFlink Playground Image
 ###############################################################################
 
-FROM flink:1.10.0-scala_2.11
+FROM openjdk:8-jre
+
+# Install dependencies
+RUN set -ex; \
+  apt-get update; \
+  apt-get -y install libsnappy1v5; \
+  rm -rf /var/lib/apt/lists/*
 
 # Install python
 RUN set -ex; \
@@ -31,38 +37,59 @@ RUN set -ex; \
   ln -s /usr/bin/python3 /usr/bin/python; \
   ln -s /usr/bin/pip3 /usr/bin/pip
 
-# Install pyflink
+# Install dependencies
+COPY ./requirements.txt /opt
 RUN set -ex; \
   apt-get update; \
   python -m pip install --upgrade pip; \
-  pip install apache-flink
+  pip install -r /opt/requirements.txt
 
-ARG FLINK_VERSION=1.10.0
+# Install pyflink
+COPY ./apache-flink-libraries-1.13.dev0.tar.gz /opt
+RUN set -ex; \
+  python -m pip install /opt/apache-flink-libraries-1.13.dev0.tar.gz \
+  rm -f /opt/apache-flink-libraries-1.13.dev0.tar.gz
 
-# Download connector libraries
-RUN wget -P /opt/flink/lib/ https://repo.maven.apache.org/maven2/org/apache/flink/flink-json/${FLINK_VERSION}/flink-json-${FLINK_VERSION}.jar; \
-    wget -P /opt/flink/lib/ https://repo.maven.apache.org/maven2/org/apache/flink/flink-csv/${FLINK_VERSION}/flink-csv-${FLINK_VERSION}.jar; \
-#    wget -P /opt/flink/lib/ https://repo.maven.apache.org/maven2/org/apache/flink/flink-avro/${FLINK_VERSION}/flink-avro-${FLINK_VERSION}.jar; \
-    wget -P /opt/flink/lib/ https://repo.maven.apache.org/maven2/org/apache/flink/flink-jdbc_2.11/${FLINK_VERSION}/flink-jdbc_2.11-${FLINK_VERSION}.jar; \
-    wget -P /opt/flink/lib/ https://repo.maven.apache.org/maven2/mysql/mysql-connector-java/8.0.19/mysql-connector-java-8.0.19.jar; \
-    wget -P /opt/flink/lib/ https://repo.maven.apache.org/maven2/org/apache/flink/flink-connector-hive_2.11/${FLINK_VERSION}/flink-connector-hive_2.11-${FLINK_VERSION}.jar; \
-    wget -P /opt/flink/lib/ https://repo.maven.apache.org/maven2/org/apache/flink/flink-hbase_2.11/${FLINK_VERSION}/flink-hbase_2.11-${FLINK_VERSION}.jar; \
-    wget -P /opt/flink/lib/ https://repo.maven.apache.org/maven2/org/apache/flink/flink-connector-hive_2.11/${FLINK_VERSION}/flink-connector-hive_2.11-${FLINK_VERSION}.jar; \
-    wget -P /opt/flink/lib/ https://repo1.maven.org/maven2/org/apache/hive/hive-exec/2.3.4/hive-exec-2.3.4.jar; \
-    wget -P /opt/flink/lib/ https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-kafka_2.11/${FLINK_VERSION}/flink-sql-connector-kafka_2.11-${FLINK_VERSION}.jar; \
-    wget -P /opt/flink/lib/ https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-elasticsearch6_2.11/${FLINK_VERSION}/flink-sql-connector-elasticsearch6_2.11-${FLINK_VERSION}.jar; \
-# Create data folders
-    mkdir -p /opt/data; \
-    mkdir -p /opt/data/stream; \
-    echo "taskmanager.memory.jvm-metaspace.size: 512m" >> /opt/flink/conf/flink-conf.yaml; \
-    echo "rest.port: 8088" >> /opt/flink/conf/flink-conf.yaml;
+COPY ./apache-flink-1.13.dev0.tar.gz /opt
+RUN set -ex; \
+  python -m pip install /opt/apache-flink-1.13.dev0.tar.gz \
+  rm -f /opt/apache-flink-1.13.dev0.tar.gz
 
-# Install hbase and run
-COPY ./hbase-fat.jar /opt/flink/lib
-COPY ./hbase-1.4.13-bin.tar.gz /opt
-#RUN wget -P /opt/ http://apache.spinellicreations.com/hbase/1.4.13/hbase-1.4.13-bin.tar.gz;
-RUN tar zxvf /opt/hbase-1.4.13-bin.tar.gz -C /opt
-RUN echo "export JAVA_HOME=/usr/local/openjdk-8" >> /opt/hbase-1.4.13/conf/hbase-env.sh
-RUN echo "\n<configuration>\n  <property>\n    <name>hbase.tmp.dir</name>\n    <value>tmp</value>  </property>\n</configuration>" > /opt/hbase-1.4.13/conf/hbase-site.xml
+# Grab gosu for easy step-down from root
+ENV GOSU_VERSION 1.11
+RUN set -ex; \
+  wget -nv -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)"; \
+  wget -nv -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc"; \
+  export GNUPGHOME="$(mktemp -d)"; \
+  for server in ha.pool.sks-keyservers.net $(shuf -e \
+                          hkp://p80.pool.sks-keyservers.net:80 \
+                          keyserver.ubuntu.com \
+                          hkp://keyserver.ubuntu.com:80 \
+                          pgp.mit.edu) ; do \
+      gpg --batch --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || : ; \
+  done && \
+  gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
+  gpgconf --kill all; \
+  rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc; \
+  chmod +x /usr/local/bin/gosu; \
+  gosu nobody true
 
-WORKDIR /opt/flink
+# Prepare environment
+ENV FLINK_HOME=/opt/flink
+ENV PATH=$FLINK_HOME/bin:$PATH
+RUN groupadd --system --gid=9999 flink && \
+    useradd --system --home-dir $FLINK_HOME --uid=9999 --gid=flink flink
+WORKDIR $FLINK_HOME
+
+# Build flink and put flink-1.13 in the current folder.
+# Remember also to put Kafka, Json jars into the flink lib folder
+ADD ./flink-1.13-SNAPSHOT /opt/flink
+
+# Add connectors
+COPY ./flink-sql-connector-kafka_2.11-1.13-SNAPSHOT.jar /opt/flink/lib/
+
+# Configure container
+COPY docker-entrypoint.sh /
+ENTRYPOINT ["/docker-entrypoint.sh"]
+EXPOSE 6123 8081
+CMD ["help"]
