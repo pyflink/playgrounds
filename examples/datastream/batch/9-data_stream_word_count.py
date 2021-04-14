@@ -8,11 +8,11 @@ from pyflink.datastream.execution_mode import RuntimeExecutionMode
 
 def data_stream_word_count_demo():
     env = StreamExecutionEnvironment.get_execution_environment()
-    env.set_parallelism(2)
+    env.set_parallelism(1)
     env.set_runtime_mode(RuntimeExecutionMode.BATCH)
 
-    input_path = '/examples/datastream/input/word_count_input'
-    output_path = '/Users/dianfu/code/src/apache/playgrounds/examples/datastream/output/data_stream_word_count'
+    input_path = '/opt/examples/datastream/input/word_count_input'
+    output_path = '/opt/examples/datastream/output/data_stream_word_count'
 
     file_source = FileSource\
         .for_record_stream_format(

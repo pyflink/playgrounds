@@ -26,6 +26,7 @@ services:
       - jobmanager:jobmanager
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
+      - TASK_MANAGER_NUMBER_OF_TASK_SLOTS=20
   zookeeper:
     image: wurstmeister/zookeeper:3.4.6
     ports:

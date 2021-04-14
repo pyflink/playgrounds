@@ -52,7 +52,7 @@ Check the logs of TM:
 docker-compose logs taskmanager
 ```
 
-You can check whether the environment is running correctly by visiting Flink Web UI [http://localhost:8088](http://localhost:8088).
+You can check whether the environment is running correctly by visiting Flink Web UI [http://localhost:8081](http://localhost:8081).
 
 # Examples
 1. PyFlink Table API WordCount
@@ -64,6 +64,7 @@ You can check whether the environment is running correctly by visiting Flink Web
 7. Python UDF used in Java Table API jobs
 8. Python UDF used in pure-SQL jobs
 9. PyFlink DataStream API WordCount
+10. State access in batch mode of PyFlink DataStream API
 
 ## 1-PyFlink Table API WordCount
 
@@ -251,11 +252,48 @@ A result file will be added in the path `/opt/examples/datastream/output/data_st
 
 Check Results:
 ```
-docker-compose exec taskmanager cat /opt/examples/datastream/output/data_stream_word_count/part-aec367b4-5e68-4958-bbb9-98b264e0d314-cp-0-task-0-file-0
+docker-compose exec taskmanager cat /opt/examples/datastream/output/data_stream_word_count/2021-04-14--03/pre-fa447e19-a6ad-42ca-966e-3a564c7fffde-0suf
 ```
 
 The results look like：
 ```
-flink	2
-pyflink	1
++I[flink, 2]
++I[pyflink, 1]
+```
+
+## 10-State access in batch mode of PyFlink DataStream API
+
+Code：[10-data_stream_batch_map_state.py](https://github.com/pyflink/playgrounds/blob/master/examples/datastream/batch/10-data_stream_batch_map_state.py)
+
+Run:
+```
+cd playgrounds
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/datastream/batch/10-data_stream_batch_map_state.py
+```
+Check Results:
+
+A result file will be added in the path `/opt/examples/datastream/output/batch_map_state`, 
+
+Check Results:
+```
+docker-compose exec taskmanager cat /opt/examples/datastream/output/batch_map_state/2021-04-14--03/pre-cc2fbd6a-08c6-4d41-a508-35e503a1a0cf-0suf
+```
+
+The results look like：
+```
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+11
+11
+11
+...
 ```
