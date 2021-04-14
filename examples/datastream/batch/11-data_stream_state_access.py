@@ -4,8 +4,23 @@ from pyflink.common.typeinfo import Types
 from pyflink.datastream import StreamExecutionEnvironment
 from pyflink.datastream.connectors import FileSink, OutputFileConfig, NumberSequenceSource
 from pyflink.datastream.execution_mode import RuntimeExecutionMode
-from pyflink.datastream.functions import KeyedProcessFunction, RuntimeContext
-from pyflink.datastream.state import MapStateDescriptor
+from pyflink.datastream.functions import KeyedProcessFunction, RuntimeContext, MapFunction
+from pyflink.datastream.state import MapStateDescriptor, ValueStateDescriptor
+
+
+class MyMapFunction(MapFunction):
+
+    def open(self, runtime_context: RuntimeContext):
+        state_desc = ValueStateDescriptor('cnt', Types.LONG())
+        self.cnt_state = runtime_context.get_state(state_desc)
+
+    def map(self, value):
+        cnt = self.cnt_state.value()
+        if cnt is None or cnt < 2:
+            self.cnt_state.update(1 if cnt is None else cnt + 1)
+            return (value[0], value[1] + 1)
+        else:
+            return (value[0], value[1])
 
 
 class MyKeyedProcessFunction(KeyedProcessFunction):
@@ -28,14 +43,14 @@ class MyKeyedProcessFunction(KeyedProcessFunction):
         yield result
 
 
-def keyed_stream_demo():
+def state_access_demo():
     env = StreamExecutionEnvironment.get_execution_environment()
-    env.set_parallelism(2)
+    env.set_parallelism(1)
     env.set_runtime_mode(RuntimeExecutionMode.BATCH)
 
-    seq_num_source = NumberSequenceSource(1, 1000)
+    seq_num_source = NumberSequenceSource(1, 10)
 
-    output_path = '/opt/examples/datastream/output/keyed_stream'
+    output_path = '/opt/examples/datastream/output/state_access'
     file_sink = FileSink \
         .for_row_format(output_path, Encoder.simple_string_encoder()) \
         .with_output_file_config(OutputFileConfig.builder().with_part_prefix('pre').with_part_suffix('suf').build()) \
@@ -49,16 +64,13 @@ def keyed_stream_demo():
 
     ds.map(lambda a: Row(a % 4, 1), output_type=Types.ROW([Types.LONG(), Types.LONG()])) \
         .key_by(lambda a: a[0]) \
-        .map(lambda a: (a[0], a[1] + 1)) \
-        .key_by(lambda a: a[0]) \
-        .reduce(lambda a, b: (a[0], a[1] + b[1])) \
+        .map(MyMapFunction(), output_type=Types.ROW([Types.LONG(), Types.LONG()])) \
         .key_by(lambda a: a[0]) \
         .process(MyKeyedProcessFunction(), Types.LONG()) \
-        .filter(lambda i: i <= 10) \
         .sink_to(file_sink)
 
-    env.execute('10-keyed_stream')
+    env.execute('11-data_stream_state_access')
 
 
 if __name__ == '__main__':
-    keyed_stream_demo()
+    state_access_demo()

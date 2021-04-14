@@ -64,7 +64,8 @@ You can check whether the environment is running correctly by visiting Flink Web
 7. Python UDF used in Java Table API jobs
 8. Python UDF used in pure-SQL jobs
 9. PyFlink DataStream API WordCount
-10. State access in batch mode of PyFlink DataStream API
+10. Keyed Stream of PyFlink DataStream API
+11. State Access in PyFlink DataStream API
 
 ## 1-PyFlink Table API WordCount
 
@@ -261,30 +262,34 @@ The results look like：
 +I[pyflink, 1]
 ```
 
-## 10-Keyed Stream of PyFlink DataStream API
+## 11-State Access in PyFlink DataStream API
 
-Code：[10-keyed_stream.py](https://github.com/pyflink/playgrounds/blob/master/examples/datastream/batch/10-keyed_stream.py)
+Code：[11-data_stream_state_access.py](https://github.com/pyflink/playgrounds/blob/master/examples/datastream/batch/11-data_stream_state_access.py)
 
 Run:
 ```
 cd playgrounds
-docker-compose exec jobmanager ./bin/flink run -py /opt/examples/datastream/batch/10-keyed_stream.py
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/datastream/batch/11-data_stream_state_access.py
 ```
 Check Results:
 
-A result file will be added in the path `/opt/examples/datastream/output/keyed_stream`, 
+A result file will be added in the path `/opt/examples/datastream/output/state_access`, 
 
 Check Results:
 ```
-docker-compose exec taskmanager cat /opt/examples/datastream/output/keyed_stream/2021-04-14--03/pre-cc2fbd6a-08c6-4d41-a508-35e503a1a0cf-0suf
+docker-compose exec taskmanager cat /opt/examples/datastream/output/state_access/2021-04-14--09/pre-7b83235f-4737-4b2f-9af7-9de0e7d4a890-0suf
 ```
 
 The results look like：
 ```
 2
 4
-6
-8
-10
-...
+2
+4
+5
+2
+4
+5
+2
+4
 ```
