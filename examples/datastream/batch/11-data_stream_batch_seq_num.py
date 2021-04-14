@@ -6,7 +6,7 @@ from pyflink.datastream.connectors import FileSink, OutputFileConfig, NumberSequ
 from pyflink.datastream.execution_mode import RuntimeExecutionMode
 
 
-def batch_seq_num_test():
+def batch_seq_num_demo():
     env = StreamExecutionEnvironment.get_execution_environment()
     env.set_parallelism(2)
     env.set_runtime_mode(RuntimeExecutionMode.BATCH)
@@ -30,8 +30,8 @@ def batch_seq_num_test():
         .reduce(lambda a, b: Row(a[0], a[1] + b[1])) \
         .sink_to(file_sink)
 
-    env.execute('9-data_stream_batch_seq_num')
+    env.execute('11-data_stream_batch_seq_num')
 
 
 if __name__ == '__main__':
-    batch_seq_num_test()
+    batch_seq_num_demo()

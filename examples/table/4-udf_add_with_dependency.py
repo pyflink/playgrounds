@@ -22,7 +22,7 @@ t_env.execute_sql("""
         ) WITH (
           'connector' = 'filesystem',
           'format' = 'csv',
-          'path' = '/opt/examples/table/data/udf_add_input'
+          'path' = '/opt/examples/table/input/udf_add_input'
         )
     """)
 
@@ -32,7 +32,7 @@ t_env.execute_sql("""
         ) WITH (
           'connector' = 'filesystem',
           'format' = 'csv',
-          'path' = '/opt/examples/table/data/udf_add_with_dependency_output'
+          'path' = '/opt/examples/table/output/udf_add_with_dependency_output'
         )
     """)
 

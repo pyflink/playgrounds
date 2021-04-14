@@ -20,7 +20,7 @@ def pandas_udf_demo():
             ) WITH (
               'connector' = 'filesystem',
               'format' = 'csv',
-              'path' = '/opt/examples/table/data/udf_add_input'
+              'path' = '/opt/examples/table/input/udf_add_input'
             )
         """)
 
@@ -31,7 +31,7 @@ def pandas_udf_demo():
             ) WITH (
               'connector' = 'filesystem',
               'format' = 'csv',
-              'path' = '/opt/examples/table/data/pandas_udf_add_output'
+              'path' = '/opt/examples/table/output/pandas_udf_add_output'
             )
         """)
 

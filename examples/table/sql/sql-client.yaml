@@ -7,7 +7,7 @@ tables:
     type: BIGINT
   connector:
     type: filesystem
-    path: "/opt/examples/table/data/sql-test-out/result.csv"
+    path: "/opt/examples/table/output/sql-test-out/result.csv"
   format:
     type: csv
     fields:

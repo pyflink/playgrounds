@@ -6,13 +6,13 @@ from pyflink.datastream.connectors import FileSource, StreamFormat, FileSink, Ou
 from pyflink.datastream.execution_mode import RuntimeExecutionMode
 
 
-def data_stream_batch_test():
+def data_stream_word_count_demo():
     env = StreamExecutionEnvironment.get_execution_environment()
     env.set_parallelism(2)
     env.set_runtime_mode(RuntimeExecutionMode.BATCH)
 
-    input_path = '/opt/examples/datastream/data/word_count_input'
-    output_path = '/opt/examples/datastream/output/data_stream_batch'
+    input_path = '/examples/datastream/input/word_count_input'
+    output_path = '/Users/dianfu/code/src/apache/playgrounds/examples/datastream/output/data_stream_word_count'
 
     file_source = FileSource\
         .for_record_stream_format(
@@ -37,8 +37,8 @@ def data_stream_batch_test():
         .reduce(lambda a, b: Row(a[0], a[1] + b[1])) \
         .sink_to(file_sink)
 
-    env.execute('8-data_stream_batch')
+    env.execute('9-data_stream_word_count')
 
 
 if __name__ == '__main__':
-    data_stream_batch_test()
+    data_stream_word_count_demo()

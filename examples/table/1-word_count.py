@@ -10,7 +10,7 @@ t_env.execute_sql("""
          ) WITH (
            'connector' = 'filesystem',
            'format' = 'csv',
-           'path' = '/opt/examples/table/data/word_count_input'
+           'path' = '/opt/examples/table/input/word_count_input'
          )
      """)
 
@@ -21,7 +21,7 @@ t_env.execute_sql("""
          ) WITH (
            'connector' = 'filesystem',
            'format' = 'csv',
-           'path' = '/opt/examples/table/data/word_count_output'
+           'path' = '/opt/examples/table/output/word_count_output'
          )
      """)
 

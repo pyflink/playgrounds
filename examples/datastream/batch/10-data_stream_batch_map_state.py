@@ -28,7 +28,7 @@ class MyKeyedProcessFunction(KeyedProcessFunction):
         yield result
 
 
-def batch_map_state_test():
+def batch_map_state_demo():
     env = StreamExecutionEnvironment.get_execution_environment()
     env.set_parallelism(2)
     env.set_runtime_mode(RuntimeExecutionMode.BATCH)
@@ -56,4 +56,4 @@ def batch_map_state_test():
 
 
 if __name__ == '__main__':
-    batch_map_state_test()
+    batch_map_state_demo()

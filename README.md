@@ -55,16 +55,17 @@ docker-compose logs taskmanager
 You can check whether the environment is running correctly by visiting Flink Web UI [http://localhost:8088](http://localhost:8088).
 
 # Examples
-1. WordCount
-2. Read and write with Kafka
+1. PyFlink Table API WordCount
+2. Read and write with Kafka using PyFlink Table API
 3. Python UDF
 4. Python UDF with dependencies
 5. Python Pandas UDF
-6. Python UDF with User-defined Metrics
+6. Python UDF with metrics
 7. Python UDF used in Java Table API jobs
 8. Python UDF used in pure-SQL jobs
+9. PyFlink DataStream API WordCount
 
-## 1-WordCount
+## 1-PyFlink Table API WordCount
 
 Code：[1-word_count.py](https://github.com/pyflink/playgrounds/blob/master/examples/table/1-word_count.py)
 
@@ -75,11 +76,11 @@ docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/1-word_co
 ```
 Check Results:
 
-A result file will be added in the path `/opt/examples/table/data/word_count_output/`, 
+A result file will be added in the path `/opt/examples/table/output/word_count_output/`, 
 
 Check Results:
 ```
-docker-compose exec taskmanager cat /opt/examples/table/data/word_count_output/part-aec367b4-5e68-4958-bbb9-98b264e0d314-cp-0-task-0-file-0
+docker-compose exec taskmanager cat /opt/examples/table/output/word_count_output/part-aec367b4-5e68-4958-bbb9-98b264e0d314-cp-0-task-0-file-0
 ```
 
 The results look like：
@@ -88,7 +89,7 @@ flink	2
 pyflink	1
 ```
 
-## 2-Read and write with Kafka
+## 2-Read and write with Kafka using PyFlink Table API
 
 Code：[2-from_kafka_to_kafka.py](https://github.com/pyflink/playgrounds/blob/master/examples/table/2-from_kafka_to_kafka.py)
 
@@ -124,11 +125,11 @@ cd playgrounds
 docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/3-udf_add.py
 ```
 
-A result file will be added in the path `/opt/examples/table/data/udf_add_output`
+A result file will be added in the path `/opt/examples/table/output/udf_add_output`
 
 Check Results:
 ```
-docker-compose exec taskmanager cat /opt/examples/table/data/udf_add_output/part-933b41cd-9388-4ba8-9437-cbf5f87c2469-cp-0-task-0-file-0
+docker-compose exec taskmanager cat /opt/examples/table/output/udf_add_output/part-933b41cd-9388-4ba8-9437-cbf5f87c2469-cp-0-task-0-file-0
 ```
 
 The results look like：
@@ -149,11 +150,11 @@ cd playgrounds
 docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/4-udf_add_with_dependency.py
 ```
 
-A result file will be added in the path `/opt/examples/table/data/udf_add_with_dependency_output`
+A result file will be added in the path `/opt/examples/table/output/udf_add_with_dependency_output`
 
 Check Results:
 ```
-docker-compose exec taskmanager cat /opt/examples/table/data/udf_add_with_dependency_output/part-589bdd40-8cfe-4f50-9484-ae46629e0a90-0-0
+docker-compose exec taskmanager cat /opt/examples/table/output/udf_add_with_dependency_output/part-589bdd40-8cfe-4f50-9484-ae46629e0a90-0-0
 ```
 
 The results look like：
@@ -172,11 +173,11 @@ cd playgrounds
 docker-compose exec jobmanager ./bin/flink run -py /opt/examples/table/5-pandas_udf_add.py
 ```
 
-A result file will be added in the path `/opt/examples/table/data/pandas_udf_add_output/`
+A result file will be added in the path `/opt/examples/table/output/pandas_udf_add_output/`
 
 Check Results:
 ```
-docker-compose exec taskmanager cat /opt/examples/table/data/pandas_udf_add_output/part-1e9a35a7-28c3-4a46-bb84-a2fb1d62e0ed-cp-0-task-0-file-0
+docker-compose exec taskmanager cat /opt/examples/table/output/pandas_udf_add_output/part-1e9a35a7-28c3-4a46-bb84-a2fb1d62e0ed-cp-0-task-0-file-0
 ```
 
 The results look like：
@@ -185,7 +186,7 @@ The results look like：
 3
 ```
 
-## 6-Python UDF with Metrics
+## 6-Python UDF with metrics
 
 Code：[6-udf_metrics.py](https://github.com/pyflink/playgrounds/blob/master/examples/table/6-udf_metrics.py)
 
@@ -228,9 +229,33 @@ docker-compose exec jobmanager ./bin/sql-client.sh embedded --environment /opt/e
 ```
 
 Check Results:
-A result file will be added in the path `/opt/examples/table/data/sql-test-out/`, with the following content：
+A result file will be added in the path `/opt/examples/table/output/sql-test-out/`, with the following content：
 ```
 2
 3
 4
+```
+
+## 9-PyFlink DataStream API WordCount
+
+Code：[9-data_stream_word_count.py](https://github.com/pyflink/playgrounds/blob/master/examples/datastream/batch/9-data_stream_word_count.py)
+
+Run:
+```
+cd playgrounds
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/datastream/batch/9-data_stream_word_count.py
+```
+Check Results:
+
+A result file will be added in the path `/opt/examples/datastream/output/data_stream_word_count`, 
+
+Check Results:
+```
+docker-compose exec taskmanager cat /opt/examples/datastream/output/data_stream_word_count/part-aec367b4-5e68-4958-bbb9-98b264e0d314-cp-0-task-0-file-0
+```
+
+The results look like：
+```
+flink	2
+pyflink	1
 ```
