@@ -28,14 +28,14 @@ class MyKeyedProcessFunction(KeyedProcessFunction):
         yield result
 
 
-def batch_map_state_demo():
+def keyed_stream_demo():
     env = StreamExecutionEnvironment.get_execution_environment()
     env.set_parallelism(2)
     env.set_runtime_mode(RuntimeExecutionMode.BATCH)
 
     seq_num_source = NumberSequenceSource(1, 1000)
 
-    output_path = '/opt/examples/datastream/output/batch_map_state'
+    output_path = '/opt//examples/datastream/output/keyed_stream'
     file_sink = FileSink \
         .for_row_format(output_path, Encoder.simple_string_encoder()) \
         .with_output_file_config(OutputFileConfig.builder().with_part_prefix('pre').with_part_suffix('suf').build()) \
@@ -44,16 +44,21 @@ def batch_map_state_demo():
     ds = env.from_source(
         source=seq_num_source,
         watermark_strategy=WatermarkStrategy.for_monotonous_timestamps(),
-        source_name='file_source',
+        source_name='seq_num_source',
         type_info=Types.LONG())
 
     ds.map(lambda a: Row(a % 4, 1), output_type=Types.ROW([Types.LONG(), Types.LONG()])) \
         .key_by(lambda a: a[0]) \
+        .map(lambda a: (a[0], a[1] + 1)) \
+        .key_by(lambda a: a[0]) \
+        .reduce(lambda a, b: (a[0], a[1] + b[1])) \
+        .key_by(lambda a: a[0]) \
         .process(MyKeyedProcessFunction(), Types.LONG()) \
+        .filter(lambda i: i <= 10) \
         .sink_to(file_sink)
 
-    env.execute('10-data_stream_batch_map_state')
+    env.execute('10-keyed_stream')
 
 
 if __name__ == '__main__':
-    batch_map_state_demo()
+    keyed_stream_demo()
