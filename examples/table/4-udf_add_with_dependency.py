@@ -13,7 +13,7 @@ def add(i, j):
     return int(fadd(1, 2))
 
 
-t_env.set_python_requirements("/opt/examples/table/data/requirements.txt")
+t_env.set_python_requirements("/opt/examples/table/input/requirements.txt")
 
 t_env.execute_sql("""
         CREATE TABLE mySource (
