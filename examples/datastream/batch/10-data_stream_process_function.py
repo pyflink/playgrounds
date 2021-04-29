@@ -28,14 +28,14 @@ class MyKeyedProcessFunction(KeyedProcessFunction):
         yield result
 
 
-def keyed_stream_demo():
+def data_stream_process_function_demo():
     env = StreamExecutionEnvironment.get_execution_environment()
     env.set_parallelism(2)
     env.set_runtime_mode(RuntimeExecutionMode.BATCH)
 
     seq_num_source = NumberSequenceSource(1, 1000)
 
-    output_path = '/opt/examples/datastream/output/keyed_stream'
+    output_path = '/opt/examples/datastream/output/data_stream_process_function_demo'
     file_sink = FileSink \
         .for_row_format(output_path, Encoder.simple_string_encoder()) \
         .with_output_file_config(OutputFileConfig.builder().with_part_prefix('pre').with_part_suffix('suf').build()) \
@@ -57,8 +57,8 @@ def keyed_stream_demo():
         .filter(lambda i: i <= 10) \
         .sink_to(file_sink)
 
-    env.execute('10-keyed_stream')
+    env.execute('10-data_stream_process_function')
 
 
 if __name__ == '__main__':
-    keyed_stream_demo()
+    data_stream_process_function_demo()

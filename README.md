@@ -262,6 +262,19 @@ The results look like：
 +I[pyflink, 1]
 ```
 
+## 10-PyFlink DataStream API ProcessFunction
+
+Code：[10-data_stream_process_function.py](https://github.com/pyflink/playgrounds/blob/master/examples/datastream/batch/10-data_stream_process_function.py)
+
+Run:
+```
+cd playgrounds
+docker-compose exec jobmanager ./bin/flink run -py /opt/examples/datastream/batch/10-data_stream_process_function.py
+```
+Check Results:
+
+A result file will be added in the path `/opt/examples/datastream/output/data_stream_process_function_demo`,
+
 ## 11-State Access in PyFlink DataStream API
 
 Code：[11-data_stream_state_access.py](https://github.com/pyflink/playgrounds/blob/master/examples/datastream/batch/11-data_stream_state_access.py)

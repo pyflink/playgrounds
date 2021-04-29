@@ -18,9 +18,9 @@ class MyMapFunction(MapFunction):
         cnt = self.cnt_state.value()
         if cnt is None or cnt < 2:
             self.cnt_state.update(1 if cnt is None else cnt + 1)
-            return (value[0], value[1] + 1)
+            return value[0], value[1] + 1
         else:
-            return (value[0], value[1])
+            return value[0], value[1]
 
 
 class MyKeyedProcessFunction(KeyedProcessFunction):
