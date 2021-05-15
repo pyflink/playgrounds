@@ -11,10 +11,10 @@ Please checkout specific branches on how to use PyFlink in a specific Flink vers
 cd image
  
 # create docker image
-docker build --tag pyflink/playgrounds:1.13.0-rc0 .
+docker build --tag pyflink/playgrounds:1.13.0-rc2 .
 
 # publish docker image
-docker push pyflink/playgrounds:1.13.0-rc0
+docker push pyflink/playgrounds:1.13.0-rc2
 ```
 
 # Environment Setup
